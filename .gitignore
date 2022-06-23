@@ -1,0 +1,7 @@
+main
+main.cpp
+.idea
+build
+nohup.out
+log.txt
+cmake-build-debug/autosoft
