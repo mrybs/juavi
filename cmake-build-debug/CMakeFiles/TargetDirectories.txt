@@ -1,3 +1,0 @@
-/home/mrybs/Projects/mcurses/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/mrybs/Projects/mcurses/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/mrybs/Projects/mcurses/cmake-build-debug/CMakeFiles/autosoft.dir

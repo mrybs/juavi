@@ -5,3 +5,4 @@ build
 nohup.out
 log.txt
 cmake-build-debug/autosoft
+cmake-build-debug/CMakeFiles
