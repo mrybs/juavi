@@ -60,15 +60,33 @@ public:
         screen.resize(y);
         for (int i = 0; i < int(y); i++)
             screen[i].resize(int(x));
+        cout << "\033[u";
+        clear();
     }
 
-    void updateScreen() {
-        system(CLEAR);
-        for (int i = 0; i < int(y); i++) {
-            for (int k = 0; k < int(x); k++)
-                cout << screen[i][k];
-            cout << endl;
-        }
+    static void setCursor(float xd, float yd){
+        cout << "\033[" + to_string(int(yd)) + ";" + to_string(int(xd)) + "f";
+    }
+    static void moveCursorX(float xd){
+        if(xd > 0)
+            cout << "\033[" + to_string(int(xd)) << "C";
+        else if(xd < 0)
+            cout << "\033[" + to_string(int(xd)) << "D";
+    }
+    static void moveCursorY(float yd){
+        if(yd > 0)
+            cout << "\033[" + to_string(int(yd)) << "A";
+        else if(yd < 0)
+            cout << "\033[" + to_string(int(yd)) << "B";
+    }
+    static void moveCursor(float xd, float yd){
+        moveCursorX(xd);
+        moveCursorY(yd);
+    }
+    static void clear(){
+        //cout << "\033[2J\033[0;0f";
+        cout << "\033[2J";
+        setCursor(0,0);
     }
 
     void drawPoint(float xd, float yd, string color) {
@@ -81,8 +99,11 @@ public:
             pixel += background;
             pixel += string(DEFAULT);
         }
-        for (int i = 0; i < aspect; i++)
-            screen[yd][xd + i] = pixel;
+        for (int i = 0; i < aspect; i++) {
+            setCursor(xd+i,yd);
+            cout << pixel;
+        }
+
     }
 
     void drawPoint(float xd, float yd, string color, char backgroundd) {
@@ -95,8 +116,10 @@ public:
             pixel += backgroundd;
             pixel += string(DEFAULT);
         }
-        for (int i = 0; i < aspect; i++)
-            screen[yd][xd + i] = pixel;
+        for (int i = 0; i < aspect; i++){
+            setCursor(xd+i,yd);
+            cout << pixel;
+        }
     }
 
     void drawPoint(float xd, float yd, string color, string bgColor) {
@@ -110,8 +133,10 @@ public:
             pixel += background;
             pixel += string(DEFAULT);
         }
-        for (int i = 0; i < aspect; i++)
-            screen[yd][xd + i] = pixel;
+        for (int i = 0; i < aspect; i++){
+            setCursor(xd+i,yd);
+            cout << pixel;
+        }
     }
 
     void drawPoint(float xd, float yd, string color, string bgColor, char backgroundd) {
@@ -126,13 +151,13 @@ public:
             pixel += backgroundd;
             pixel += string(DEFAULT);
         }
-        for (int i = 0; i < aspect; i++)
-            screen[yd][xd + i] = pixel;
+        for (int i = 0; i < aspect; i++) {
+            setCursor(xd+i,yd);
+            cout << pixel;
+        }
     }
 
     void drawRectangle(float xd, float yd, float width, float height, string color) {
-        height *= 2;
-        xd *= 2;
         string pixel = string(color);
         for (int i = 0; i < int(yd + width); i++)
             if (i >= yd && i <= yd + width)
@@ -142,8 +167,6 @@ public:
     }
 
     void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd) {
-        height *= 2;
-        xd *= 2;
         string pixel = string(color);
         for (int i = 0; i < int(yd + width); i++)
             if (i >= yd && i <= yd + width)
@@ -153,28 +176,25 @@ public:
     }
 
     void drawLine(float xd, float yd, float size, bool vertical, string color) {
-        xd *= 2;
-        string pixel = string(color);
+        /*string pixel = string(color);
         if (color == "NONE") {
             pixel = " ";
         } else {
             pixel += background;
             pixel += string(DEFAULT);
-        }
+        }*/
         if (vertical) {
             for (int i = 0; i < int(yd + size); i++)
                 if (i >= yd && i <= yd + size)
-                    for (int j = 0; j < aspect; j++)
-                        drawPoint(xd+j,i,color);
+                    drawPoint(xd,i,color);
         } else {
-            size *= 2;
-            for (int k = 0; k < int(xd + size); k += (aspect - 1))
+            //size *= 2;
+            for (int k = 0; k < int(xd + size)-1; k += (aspect - 1))
                 if (k >= xd && k <= xd + size)
                     drawPoint(k, yd, color);
         }
     }
     void drawLine(float xd, float yd, float size, bool vertical, string color, char backgroundd) {
-        xd *= 2;
         if (vertical)
             for (int i = 0; i < int(yd + size); i++)
                 if (i >= yd && i <= yd + size) {
@@ -182,23 +202,32 @@ public:
                         drawPoint(xd+j,i,color);
                 }
                 else {
-                    size *= 2;
+                    //size *= 2;
                     for (int k = 0; k < int(xd + size); k += (aspect - 1))
                         if (k >= xd && k <= xd + size)
                             drawPoint(k, yd, color, backgroundd);
                 }
+        else {
+            //size *= 2;
+            for (int k = 0; k < int(xd + size); k += (aspect - 1))
+                if (k >= xd && k <= xd + size)
+                    drawPoint(k, yd, color, backgroundd);
+        }
     }
     void drawBorder(float xd, float yd, float width, float height, float size, string color) {
+        while(size >= width || size >= height){size-=1;}
+        drawLine(xd, yd, width, false, color);//x-up
+        drawLine(xd, yd, width, true, color);//y-left
+        drawLine(xd, yd + height, width, false, color);//x-down
+        drawLine(xd + width-1, yd, width + 1, true, color);//y-right
+        if(size != 1) drawBorder(xd+1,yd+1,width-2,height-2,size-1,color);
+    }
+    void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd) {
+        while(size >= width || size >= height){size-=1;}
         drawLine(xd, yd, width, false, color);
         drawLine(xd, yd, width, true, color);
         drawLine(xd, yd + height, width, false, color);
         drawLine(xd + width, yd, width + 1, true, color);
-    }
-    void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd) {
-        drawLine(xd, yd, width, false, color, backgroundd);
-        drawLine(xd, yd, width, true, color, backgroundd);
-        drawLine(xd, yd + height, width, false, color, backgroundd);
-        drawLine(xd + width, yd, width + 1, true, color, backgroundd);
     }
     void print(string text, float xd, float yd, string color, string bgColor, bool bold) {
         color = getColor(color, true);
@@ -219,7 +248,6 @@ public:
     }
 
     void drawBackground(string color) {
-        color = getColor(color, true);
         string pixel = string(color);
         if (color == "NONE") {
             pixel = " ";
@@ -247,6 +275,5 @@ public:
         char background;
         string backgroundColor;
         vector<vector<string>> screen;
-
 
 };
