@@ -1,4 +1,4 @@
-# MCurses
+# [MCurses](https://github.com/mrybs/mcurses)
 Lib for easy TUI via c++
 
 ## Depends
