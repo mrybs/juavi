@@ -1,1 +1,0 @@
-/usr/bin/g++ -g CMakeFiles/autosoft.dir/main.cpp.o -o autosoft 

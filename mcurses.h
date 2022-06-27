@@ -2,9 +2,11 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cstdio>
+#include <clocale>
+#include <csignal>
+#include "termios.h"
 using namespace std;
-
-#define CLEAR "clear"
 
 class mcurses {
 public:
@@ -25,6 +27,35 @@ public:
     const string BCYAN = "\033[0;46m";
     const string BWHITE = "\033[0;47m";
     const string DEFAULT = "\033[0m";
+
+    char escape = 27; //escape-1
+    char up = 72; //arrow up-3
+    char down = 80; //arrow down-3
+    char left = 75; //arrow left-3
+    char right = 77; //arrow right-3
+    char pgup = 126; //page up-3
+    char pgdn = 81; //page down-3
+    char home = 71; //home-3
+    char end = 79; //end-3
+    char tab = '\t'; //tab-1
+    char backspace = 8; //backspace-1
+
+    static char getch() {
+        char buf = 0;
+        struct termios old = {0};
+        fflush(stdout);
+        if (tcgetattr(0, &old) < 0) perror("tcsetattr()");
+        old.c_lflag &= ~ICANON;
+        old.c_lflag &= ~ECHO;
+        old.c_cc[VMIN]  = 1;
+        old.c_cc[VTIME] = 0;
+        if (tcsetattr(0, TCSANOW, &old) < 0) perror("tcsetattr ICANON");
+        if (read(0, &buf, 1) < 0) perror("read()");
+        old.c_lflag |= ICANON;
+        old.c_lflag |= ECHO;
+        if (tcsetattr(0, TCSADRAIN, &old) < 0) perror ("tcsetattr ~ICANON");
+        return buf;
+    }
 
     string getColor(string color, bool fg) {
         if(fg){
@@ -55,36 +86,57 @@ public:
         x = xd;
         y = yd;
         aspect = aspectd;
+        cursorX = 0;
+        cursorY = 0;
         x *= aspect;
         background = backgroundd;
-        screen.resize(y);
-        for (int i = 0; i < int(y); i++)
-            screen[i].resize(int(x));
         cout << "\033[u";
         clear();
     }
 
-    static void setCursor(float xd, float yd){
+    static void setLocale(int category, const char* locale) {setlocale(category, locale);}
+
+    void parseKey(){
+        int input = getch();
+        input = getch();
+        input = getch();
+        if(input == escape) exitProgram(0, "escape pressed"); else
+        if(input == up) moveCursorY(1); else
+        if(input == down) moveCursorY(-1); else
+        if(input == left) moveCursorX(-1); else
+        if(input == right) moveCursorX(1); else
+        if(input == home) setCursor(0, cursorY); else
+        if(input == end) setCursor(x, cursorY);
+    }
+
+    void exitProgram(int result, const char* message){
+        setCursor(0,y);
+        cout << "Exit message: " << message << endl;
+        exit(result);
+    }
+
+    void setCursor(float xd, float yd){
         cout << "\033[" + to_string(int(yd)) + ";" + to_string(int(xd)) + "f";
+        cursorX = xd;
+        cursorY = yd;
     }
-    static void moveCursorX(float xd){
-        if(xd > 0)
-            cout << "\033[" + to_string(int(xd)) << "C";
-        else if(xd < 0)
-            cout << "\033[" + to_string(int(xd)) << "D";
+    void moveCursorX(float xd){
+        if(xd > 0) cout << "\033[" + to_string(int(xd)) << "C";
+        else if(xd < 0) cout << "\033[" + to_string(int(xd)) << "D";
+        cursorX += xd;
     }
-    static void moveCursorY(float yd){
-        if(yd > 0)
-            cout << "\033[" + to_string(int(yd)) << "A";
-        else if(yd < 0)
-            cout << "\033[" + to_string(int(yd)) << "B";
+    void moveCursorY(float yd){
+        if(yd > 0) cout << "\033[" + to_string(int(yd)) << "A";
+        else if(yd < 0) cout << "\033[" + to_string(int(yd)) << "B";
+        cursorY += yd;
     }
-    static void moveCursor(float xd, float yd){
+    void moveCursor(float xd, float yd){
         moveCursorX(xd);
         moveCursorY(yd);
+        cursorX += xd;
+        cursorY += yd;
     }
-    static void clear(){
-        //cout << "\033[2J\033[0;0f";
+    void clear(){
         cout << "\033[2J";
         setCursor(0,0);
     }
@@ -93,9 +145,8 @@ public:
         color = getColor(color, true);
         xd *= aspect;
         string pixel = string(color);
-        if (color == "NONE") {
-            pixel = " ";
-        } else {
+        if (color == "NONE") pixel = " ";
+        else {
             pixel += background;
             pixel += string(DEFAULT);
         }
@@ -110,9 +161,8 @@ public:
         color = getColor(color, true);
         xd *= 2;
         string pixel = string(color);
-        if (color == "NONE") {
-            pixel = " ";
-        } else {
+        if (color == "NONE") pixel = " ";
+        else {
             pixel += backgroundd;
             pixel += string(DEFAULT);
         }
@@ -127,9 +177,8 @@ public:
         xd *= 2;
         string pixel = string(color);
         pixel += string(bgColor);
-        if (color == "NONE") {
-            pixel = " ";
-        } else {
+        if (color == "NONE") pixel = " ";
+        else {
             pixel += background;
             pixel += string(DEFAULT);
         }
@@ -145,9 +194,8 @@ public:
         xd *= 2;
         string pixel = string(color);
         pixel += string(bgColor);
-        if (color == "NONE") {
-            pixel = " ";
-        } else {
+        if (color == "NONE") pixel = " ";
+        else {
             pixel += backgroundd;
             pixel += string(DEFAULT);
         }
@@ -176,19 +224,11 @@ public:
     }
 
     void drawLine(float xd, float yd, float size, bool vertical, string color) {
-        /*string pixel = string(color);
-        if (color == "NONE") {
-            pixel = " ";
-        } else {
-            pixel += background;
-            pixel += string(DEFAULT);
-        }*/
         if (vertical) {
             for (int i = 0; i < int(yd + size); i++)
                 if (i >= yd && i <= yd + size)
                     drawPoint(xd,i,color);
         } else {
-            //size *= 2;
             for (int k = 0; k < int(xd + size)-1; k += (aspect - 1))
                 if (k >= xd && k <= xd + size)
                     drawPoint(k, yd, color);
@@ -202,13 +242,11 @@ public:
                         drawPoint(xd+j,i,color);
                 }
                 else {
-                    //size *= 2;
                     for (int k = 0; k < int(xd + size); k += (aspect - 1))
                         if (k >= xd && k <= xd + size)
                             drawPoint(k, yd, color, backgroundd);
                 }
         else {
-            //size *= 2;
             for (int k = 0; k < int(xd + size); k += (aspect - 1))
                 if (k >= xd && k <= xd + size)
                     drawPoint(k, yd, color, backgroundd);
@@ -224,26 +262,16 @@ public:
     }
     void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd) {
         while(size >= width || size >= height){size-=1;}
-        drawLine(xd, yd, width, false, color);
-        drawLine(xd, yd, width, true, color);
-        drawLine(xd, yd + height, width, false, color);
-        drawLine(xd + width, yd, width + 1, true, color);
+        drawLine(xd, yd, width, false, color, backgroundd);
+        drawLine(xd, yd, width, true, color, backgroundd);
+        drawLine(xd, yd + height, width, false, color, backgroundd);
+        drawLine(xd + width, yd, width + 1, true, color, backgroundd);
     }
     void print(string text, float xd, float yd, string color, string bgColor, bool bold) {
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
         for (int i = 0; i < text.length(); i++) {
-            string pixel = color + bgColor + text[i] + DEFAULT;
-            screen[yd][xd + i] = pixel;
-            //drawPoint(xd + i, yd, color, bgColor,text[i]);
-        }
-    }
-    void print(string text, float xd, float yd, string color, string bgColor, bool bold, char backgroundd) {
-        bgColor = getColor(bgColor, false);
-        for (int i = 0; i < text.length(); i++) {
-            string pixel = color + bgColor + text[i] + DEFAULT;
-            screen[yd][xd + i] = pixel;
-            drawPoint(xd + i, yd, color, bgColor, backgroundd);
+            drawPoint(xd+i,yd,color,bgColor,text[i]);
         }
     }
 
@@ -271,9 +299,8 @@ public:
     }
 
     private:
-        float x, y, aspect;
+        float x, y, aspect, cursorX, cursorY;
         char background;
         string backgroundColor;
-        vector<vector<string>> screen;
 
 };
