@@ -1,5 +1,5 @@
 # [MCurses](https://github.com/mrybs/mcurses)
-Lib for easy TUI via c++
+Library for creating TUI and for console controlling in c++
 
 ## Depends
 
