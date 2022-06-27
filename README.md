@@ -3,7 +3,7 @@ Lib for easy TUI via c++
 
 ## Depends
 
-`iostream`, `vector`, `string` and `algorithm`
+`iostream`, `string`, `algorithm`, `cstdio`, `clocale`, `csignal` and `termios`
 
 ## Including
 Copy `mcurses.h` file into your project. Include it into your main file:
@@ -26,6 +26,13 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 
 ## Functions
+`static void setLocale(int category, const char* locale)` - sets locale
+
+`static char getch()` - gets char from input stream
+
+`void parseKey()` - parsing pressed keys
+
+`static void clear()` - clears the screen
 
 `string getColor(string color, bool fg)` - translates the name of a color into a sequence corresponding to that color for the background or foreground
 
@@ -37,8 +44,6 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 `static void moveCursor(float xd, float yd)` - xy-axises cursor shift
 
-`static void clear()` - clears the screen
-
 `void drawPoint(float xd, float yd, string color)` - draws a point on the coordinates
 
 `void drawPoint(float xd, float yd, string color, char backgroundd)` - draws a point on the specified coordinates with a custom background char
@@ -47,23 +52,49 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 `void drawPoint(float xd, float yd, string color, string bgColor, char backgroundd)` - draws a point on the coordinates with custom background color and char
 
-`void drawRectangle(float xd, float yd, float width, float height, string color)` - draws a rectangle
-
-`void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd)` - draws a rectangle with a custom background char
+`void print(string text, float xd, float yd, string color, string bgColor, bool bold)` - print a text on the specified coordinates
 
 `void drawLine(float xd, float yd, float size, bool vertical, string color)` - draws a line
 
 `void drawLine(float xd, float yd, float size, bool vertical, string color, char backgroundd)` - draws a line with a custom background char
 
-`void drawBorder(float xd, float yd, float width, float height, float size, string color)` - draws a border
+`void drawRectangle(float xd, float yd, float width, float height, string color)` - draws a rectangle
 
-`void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd)` - draws a border with a custom background char
-
-`void print(string text, float xd, float yd, string color, string bgColor, bool bold)` - print a text on the specified coordinates
+`void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd)` - draws a rectangle with a custom background char
 
 `void drawBackground(string color)` - draws a background
 
 `void drawBackground(string color, char backgroundd)` - draws a background with a custom background char
+
+`void drawBorder(float xd, float yd, float width, float height, float size, string color)` - draws a border
+
+`void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd)` - draws a border with a custom background char
+
+`void exitProgram(int result, const char* message)` - exits from program
+
+## Variables
+### Keys
+`char escape = 27` - escape
+
+`char up = 72` - arrow up
+
+`char down = 80` - arrow down
+
+`char left = 75` - arrow left
+
+`char right = 77` - arrow right
+
+`char pgup = 126` - page up
+
+`char pgdn = 81` - page down
+
+`char home = 71` - home
+
+`char end = 79` - end
+
+`char tab = '\t'` - tab
+
+`char backspace = 8` - backspace
 
 ## Constants
 ### Colors
@@ -103,3 +134,20 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 #### Default color
 `const string DEFAULT = "\033[0m"`
+
+# ASCIITEST
+
+## About
+This program is based on the mcurses library. It outputs the character number entered by the user.
+
+## Compilation
+I use the gcc compiler. Just enter:
+
+`gcc -lstdc++ asciitest.cpp -o asciitest`
+
+In the mcurses folder
+
+## Launch
+To start, you need to enter
+
+`./asciitest`
