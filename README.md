@@ -1,5 +1,5 @@
 # [MCurses](https://github.com/mrybs/mcurses)
-### [This library is under GNU General Public License 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
+### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
 Library for creating TUI and for console controlling in c++
 
@@ -138,7 +138,7 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 `const string DEFAULT = "\033[0m"`
 
 # ASCIITEST
-### [This c++ code is under GNU General Public License 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
+### [This c++ code is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
 This program is based on the mcurses library. It outputs the character number entered by the user.
 

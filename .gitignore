@@ -7,3 +7,6 @@ nohup.out
 log.txt
 cmake-build-debug
 CMakeLists.txt
+examples
+examples/*/build
+examples/*/main

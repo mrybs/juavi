@@ -29,15 +29,15 @@ public:
     const string DEFAULT = "\033[0m";
 
     char escape = 27; //escape-1
-    char up = 72; //arrow up-3
-    char down = 80; //arrow down-3
-    char left = 75; //arrow left-3
-    char right = 77; //arrow right-3
-    char pgup = 126; //page up-3
-    char pgdn = 81; //page down-3
-    char home = 71; //home-3
-    char end = 79; //end-3
-    char tab = '\t'; //tab-1
+    char up[3] = {27,91,65}; //arrow up-3
+    char down[3] = {27,91,66}; //arrow down-3
+    char left[3] = {27,91,68}; //arrow left-3
+    char right[3] = {27,91,67}; //arrow right-3
+    char pgup[4] = {27,91,53,126}; //page up-3
+    char pgdn[4] = {27,91,54,126}; //page down-3
+    char home[3] = {27,91,72}; //home-3
+    char end[3] = {27,91,70}; //end-3
+    char tab = {'\t'}; //tab-1
     char backspace = 8; //backspace-1
 
     static char getch() {
@@ -88,6 +88,8 @@ public:
         aspect = aspectd;
         cursorX = 0;
         cursorY = 0;
+        ch = 0;
+        k = 0;
         x *= aspect;
         background = backgroundd;
         cout << "\033[u";
@@ -95,19 +97,6 @@ public:
     }
 
     static void setLocale(int category, const char* locale) {setlocale(category, locale);}
-
-    void parseKey(){
-        int input = getch();
-        input = getch();
-        input = getch();
-        if(input == escape) exitProgram(0, "escape pressed"); else
-        if(input == up) moveCursorY(1); else
-        if(input == down) moveCursorY(-1); else
-        if(input == left) moveCursorX(-1); else
-        if(input == right) moveCursorX(1); else
-        if(input == home) setCursor(0, cursorY); else
-        if(input == end) setCursor(x, cursorY);
-    }
 
     void exitProgram(int result, const char* message){
         setCursor(0,y);
@@ -151,7 +140,7 @@ public:
             pixel += string(DEFAULT);
         }
         for (int i = 0; i < aspect; i++) {
-            setCursor(xd+i,yd);
+            setCursor(xd-i+aspect,yd);
             cout << pixel;
         }
 
@@ -167,7 +156,7 @@ public:
             pixel += string(DEFAULT);
         }
         for (int i = 0; i < aspect; i++){
-            setCursor(xd+i,yd);
+            setCursor(xd-i+aspect,yd);
             cout << pixel;
         }
     }
@@ -183,7 +172,7 @@ public:
             pixel += string(DEFAULT);
         }
         for (int i = 0; i < aspect; i++){
-            setCursor(xd+i,yd);
+            setCursor(xd-i+aspect,yd);
             cout << pixel;
         }
     }
@@ -200,7 +189,7 @@ public:
             pixel += string(DEFAULT);
         }
         for (int i = 0; i < aspect; i++) {
-            setCursor(xd+i,yd);
+            setCursor(xd-i+aspect,yd);
             cout << pixel;
         }
     }
@@ -302,5 +291,6 @@ public:
         float x, y, aspect, cursorX, cursorY;
         char background;
         string backgroundColor;
+        char ch, k;
 
 };
