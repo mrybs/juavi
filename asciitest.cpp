@@ -2,7 +2,7 @@
 
 int main(){
     mcurses* curses = new mcurses(1,1,1,1);
-    /*int input;
+    int input;
     printf("ASCIITEST, (c) mrybs, 2022\n"
            "Press any key, <Esc> to exit\n");
     while(1){
@@ -14,26 +14,5 @@ int main(){
         else cout << "Code ASCII:\t";
         cout << input << endl;
         if(input == 27) return 0;
-    }*/
-    int key;
-
-    printf("KBDASCII, (c) A. Frolov, 1997\n"
-           "Press any key, <Esc> to exit\n");
-
-    for(;;)
-    {
-        // Читаем символ
-        key = curses->getch();
-        if((key == 0) || (key == 0xe0))
-        {
-            key = curses->getch();
-            printf("Extended code ASCII:\t" );
-        }
-        else
-            printf( "Code ASCII:\t");
-
-        printf("%d\n",key);
-        if(key == 27)
-            break;
     }
 }
