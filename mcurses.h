@@ -12,20 +12,38 @@ class mcurses {
 public:
     const string FBLACK = "\033[0;30m";
     const string FRED = "\033[0;31m";
-    const string FGREEN = "\033[1;32m";
-    const string FYELLOW = "\033[1;33m";
+    const string FGREEN = "\033[0;32m";
+    const string FYELLOW = "\033[0;33m";
     const string FBLUE = "\033[0;34m";
     const string FMAGENTA = "\033[1;35m";
     const string FCYAN = "\033[0;36m";
-    const string FWHITE = "\033[0;37m";
+    const string FGRAY = "\033[0;37m";
+    const string FLRED = "\033[0;38m";
+    const string FWHITE = "\033[0;39m";
+    const string FLGREEN = "\033[0;92m";
+    const string FLYELLOW = "\033[0;93m";
+    const string FLBLUE = "\033[0;94m";
+    const string FLMAGENTA = "\033[1;95m";
+    const string FLCYAN = "\033[0;96m";
+    const string FLGRAY = "\033[0;97m";
+
     const string BBLACK = "\033[0;40m";
-    const string BRED = "\033[0;41";
-    const string BGREEN = "\033[1;42m";
-    const string BYELLOW = "\033[1;43m";
+    const string BRED = "\033[0;41m";
+    const string BGREEN = "\033[0;42m";
+    const string BYELLOW = "\033[0;43m";
     const string BBLUE = "\033[0;44m";
-    const string BMAGENTA = "\033[1;45m";
+    const string BMAGENTA = "\033[0;45m";
     const string BCYAN = "\033[0;46m";
     const string BWHITE = "\033[0;47m";
+    const string BGRAY = "\033[0;100m";
+    const string BLRED = "\033[0;101m";
+    const string BLGREEN = "\033[0;102m";
+    const string BLYELLOW = "\033[0;103m";
+    const string BLBLUE = "\033[0;104m";
+    const string BLMAGENTA = "\033[0;105m";
+    const string BLCYAN = "\033[0;106m";
+    const string BLGRAY = "\033[0;100m";
+    const string BLWHITE = "\033[0;107m";
     const string DEFAULT = "\033[0m";
 
     char escape = 27; //escape-1
@@ -39,6 +57,24 @@ public:
     char end[3] = {27,91,70}; //end-3
     char tab = {'\t'}; //tab-1
     char backspace = 8; //backspace-1
+
+    mcurses(float x, float y, float aspect) {
+        this->x = x;
+        this->y = y;
+        this->aspect = aspect;
+        cursorX = 0;
+        cursorY = 0;
+        ch = 0;
+        k = 0;
+        this->x *= aspect;
+        background = ' ';
+        cout << "\033[u";
+        clear();
+    }
+
+    mcurses(float x, float y, float aspect, char background) : mcurses(x, y, aspect){
+        this->background = background;
+    }
 
     static char getch() {
         char buf = 0;
@@ -67,6 +103,14 @@ public:
             if (color == "CYAN") return FCYAN;
             if (color == "MAGENTA") return FMAGENTA;
             if (color == "WHITE") return FWHITE;
+            if (color == "GRAY") return FGRAY;
+            if (color == "LRED") return FLRED;
+            if (color == "LGREEN") return FLGREEN;
+            if (color == "LYELLOW") return FLYELLOW;
+            if (color == "LBLUE") return FLBLUE;
+            if (color == "LCYAN") return FLCYAN;
+            if (color == "LMAGENTA") return FLMAGENTA;
+            if (color == "LGRAY") return FLGRAY;
         }
         else{
             if (color == "BLACK") return BBLACK;
@@ -77,23 +121,18 @@ public:
             if (color == "CYAN") return BCYAN;
             if (color == "MAGENTA") return BMAGENTA;
             if (color == "WHITE") return BWHITE;
+            if (color == "GRAY") return BGRAY;
+            if (color == "LRED") return BLRED;
+            if (color == "LGREEN") return BLGREEN;
+            if (color == "LYELLOW") return BLYELLOW;
+            if (color == "LBLUE") return BLBLUE;
+            if (color == "LCYAN") return BLCYAN;
+            if (color == "LMAGENTA") return BLMAGENTA;
+            if (color == "LWHITE") return BLWHITE;
+            if (color == "LGRAY") return BLGRAY;
         }
         if (color == "NONE") return "NONE";
         return DEFAULT;
-    }
-
-    mcurses(float xd, float yd, float aspectd, char backgroundd) {
-        x = xd;
-        y = yd;
-        aspect = aspectd;
-        cursorX = 0;
-        cursorY = 0;
-        ch = 0;
-        k = 0;
-        x *= aspect;
-        background = backgroundd;
-        cout << "\033[u";
-        clear();
     }
 
     static void setLocale(int category, const char* locale) {setlocale(category, locale);}
@@ -130,27 +169,26 @@ public:
         setCursor(0,0);
     }
 
-    void drawPoint(float xd, float yd, string color) {
-        color = getColor(color, true);
-        xd *= aspect;
-        string pixel = string(color);
-        if (color == "NONE") pixel = " ";
+    void drawPoint(float xd, float yd, string bgColor) {
+        bgColor = getColor(bgColor, false);
+        xd *= 2;
+        string pixel = string(bgColor);
+        if (bgColor == "NONE") pixel = " ";
         else {
             pixel += background;
             pixel += string(DEFAULT);
         }
-        for (int i = 0; i < aspect; i++) {
+        for (int i = 0; i < aspect; i++){
             setCursor(xd-i+aspect,yd);
             cout << pixel;
         }
-
     }
 
-    void drawPoint(float xd, float yd, string color, char backgroundd) {
-        color = getColor(color, true);
+    void drawPoint(float xd, float yd, string bgColor, char backgroundd) {
+        bgColor = getColor(bgColor, false);
         xd *= 2;
-        string pixel = string(color);
-        if (color == "NONE") pixel = " ";
+        string pixel = string(bgColor);
+        if (bgColor == "NONE") pixel = " ";
         else {
             pixel += backgroundd;
             pixel += string(DEFAULT);
@@ -163,6 +201,7 @@ public:
 
     void drawPoint(float xd, float yd, string color, string bgColor) {
         color = getColor(color, true);
+        bgColor = getColor(bgColor, false);
         xd *= 2;
         string pixel = string(color);
         pixel += string(bgColor);
@@ -194,13 +233,13 @@ public:
         }
     }
 
-    void drawRectangle(float xd, float yd, float width, float height, string color) {
-        string pixel = string(color);
+    void drawRectangle(float xd, float yd, float width, float height, string bgColor) {
+        string pixel = string(bgColor);
         for (int i = 0; i < int(yd + width); i++)
             if (i >= yd && i <= yd + width)
                 for (int k = 0; k < int(xd + height); k += (aspect - 1))
                     if (k >= xd && k <= xd + height)
-                        drawPoint(k, i, color);
+                        drawPoint(k, i, bgColor);
     }
 
     void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd) {
@@ -265,17 +304,9 @@ public:
     }
 
     void drawBackground(string color) {
-        string pixel = string(color);
-        if (color == "NONE") {
-            pixel = " ";
-
-        } else {
-            pixel += background;
-            pixel += string(DEFAULT);
-        }
         for (int i = 0; i < int(y); i++) {
             for (int k = 0; k < int(x/aspect); k++)
-                drawPoint(k, i, color);
+                drawPoint(k, i, color, color);
         }
         backgroundColor = color;
     }
