@@ -18,7 +18,7 @@ public:
     int setDefaultColor(string color){this->color=color;}
     int setDefaultBackgroundColor(string backgroundColor){this->backgroundColor=backgroundColor;}
     int render(s)
-privates:
+private:
     float x, y, width, height;
     string color, backgroundColor;
 };
