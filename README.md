@@ -1,23 +1,17 @@
-# [MCurses](https://github.com/mrybs/mcurses)
+# [MCurses](https://github.com/mrybs/mcurses/blob/main/mcurses.h)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
 Library for creating TUI and for console controlling in c++
-
-## Depends
-
-`iostream`, `string`, `algorithm`, `cstdio`, `clocale`, `csignal` and `termios`
-
+## Libraries are used:
+`iostream`, `string`, `algorithm`, `cstdio`, `clocale`, 
+`csignal`, `cmath` and `termios`
 ## Including
 Copy `mcurses.h` file into your project. Include it into your main file:
 
 `#include "mcurses.h"`
-
 ## Constructor
-
 `mcurses(float xd, float yd, float aspectd, char backgroundd)`
-
 ### Where
-
 `float xd` - screen size by x-axis
 
 `float yd` - screen size by y-axis
@@ -25,8 +19,6 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 `float aspectd` - font height/width ratio
 
 `char backgroundd` - background char
-
-
 ## Functions
 `static void setLocale(int category, const char* locale)` - sets locale
 
@@ -36,9 +28,12 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 `static void clear()` - clears the screen
 
-`string getColor(string color, bool fg)` - translates the name of a color into a sequence corresponding to that color for the background or foreground
+`string getColor(string color, bool fg)` - translates the name 
+of a color into a sequence corresponding to that color for the 
+background or foreground
 
-`static void setCursor(float xd, float yd)` - Moving the cursor to the specified coordinates
+`static void setCursor(float xd, float yd)` - Moving the cursor to 
+the specified coordinates
 
 `static void moveCursorX(float xd)` - x-axis cursor shift
 
@@ -46,34 +41,45 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 `static void moveCursor(float xd, float yd)` - xy-axises cursor shift
 
-`void drawPoint(float xd, float yd, string color)` - draws a point on the coordinates
+`void drawPoint(float xd, float yd, string color)` - draws a point on 
+the coordinates
 
-`void drawPoint(float xd, float yd, string color, char backgroundd)` - draws a point on the specified coordinates with a custom background char
+`void drawPoint(float xd, float yd, string color, char backgroundd)` - 
+draws a point on the specified coordinates with a custom background char
 
-`void drawPoint(float xd, float yd, string color, string bgColor)` - draws a point on the specified coordinates with a custom background color
+`void drawPoint(float xd, float yd, string color, string bgColor)` - 
+draws a point on the specified coordinates with a custom background color
 
-`void drawPoint(float xd, float yd, string color, string bgColor, char backgroundd)` - draws a point on the coordinates with custom background color and char
+`void drawPoint(float xd, float yd, string color, string bgCo lor, char backgroundd)` - 
+draws a point on the coordinates with custom background color and char
 
-`void print(string text, float xd, float yd, string color, string bgColor, bool bold)` - print a text on the specified coordinates
+`void print(string text, float xd, float yd, string color, string bgColor, bool bold)` - 
+print a text on the specified coordinates
 
-`void drawLine(float xd, float yd, float size, bool vertical, string color)` - draws a line
+`void drawLine(float xd, float yd, float size, bool vertical, string color)` - 
+draws a line
 
-`void drawLine(float xd, float yd, float size, bool vertical, string color, char backgroundd)` - draws a line with a custom background char
+`void drawLine(float xd, float yd, float size, bool vertical, string color, char backgroundd)` - 
+draws a line with a custom background char
 
-`void drawRectangle(float xd, float yd, float width, float height, string color)` - draws a rectangle
+`void drawRectangle(float xd, float yd, float width, float height, string color)` - 
+draws a rectangle
 
-`void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd)` - draws a rectangle with a custom background char
+`void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd)` - 
+draws a rectangle with a custom background char
 
 `void drawBackground(string color)` - draws a background
 
-`void drawBackground(string color, char backgroundd)` - draws a background with a custom background char
+`void drawBackground(string color, char backgroundd)` - draws a 
+background with a custom background char
 
-`void drawBorder(float xd, float yd, float width, float height, float size, string color)` - draws a border
+`void drawBorder(float xd, float yd, float width, float height, float size, string color)` - 
+draws a border
 
-`void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd)` - draws a border with a custom background char
+`void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd)` - 
+draws a border with a custom background char
 
 `void exitProgram(int result, const char* message)` - exits from program
-
 ## Variables
 ### Keys
 `char escape = 27` - escape
@@ -97,58 +103,120 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 `char tab = '\t'` - tab
 
 `char backspace = 8` - backspace
-
 ## Constants
 ### Colors
 #### Foreground color
-`const string FBLACK = "\033[0;30m"` -black
+`const string FBLACK` - black color
 
-`const string FRED = "\033[0;31m"` - red
+`const string FRED` - red color
 
-`const string FGREEN = "\033[1;32m"` - green
+`const string FGREEN` - green color
 
-`const string FYELLOW = "\033[1;33m"` - yellow
+`const string FYELLOW` - yellow color
 
-`const string FBLUE = "\033[0;34m"` - blue
+`const string FBLUE` - blue color
 
-`const string FMAGENTA = "\033[1;35m"` - magenta
+`const string FMAGENTA` - magenta color
 
-`const string FCYAN = "\033[0;36m"` - cyan
+`const string FCYAN` - cyan color
 
-`const string FWHITE = "\033[0;37m"` - white
+`const string FCYAN` - gray color
 
+`const string FWHITE` - white color
+
+`const string FLRED` - light red color
+
+`const string FLGREEN` - light green color
+
+`const string FLYELLOW` - light yellow color
+
+`const string FLBLUE` - light blue color
+
+`const string FLMAGENTA` - light magenta color
+
+`const string FLCYAN` - light cyan color
+
+`const string FLGRAY` - light gray color
 #### Background color
-`const string BBLACK = "\033[0;40m"` - black
+`const string BBLACK` - black color
 
-`const string BRED = "\033[0;41"` - red
+`const string BRED` - red color
 
-`const string BGREEN = "\033[1;42m"` - green
+`const string BGREEN` - green color
 
-`const string BYELLOW = "\033[1;43m"` - yellow
+`const string BYELLOW` - yellow color
 
-`const string BBLUE = "\033[0;44m"` - blue
+`const string BBLUE` - blue color
 
-`const string BMAGENTA = "\033[1;45m"` - magenta
+`const string BMAGENTA` - magenta color
 
-`const string BCYAN = "\033[0;46m"` - cyan
+`const string BCYAN ` - cyan color
 
-`const string BWHITE = "\033[0;47m"` - white
+`const string BGRAY` - gray color
 
+`const string BWHITE` - white color
+
+`const string BLRED` - light red color
+
+`const string BLGREEN` - light green color
+
+`const string BLYELLOW` - light yellow color
+
+`const string BLBLUE` - light blue color
+
+`const string BLMAGENTA` - light magenta color
+
+`const string BLCYAN` - light cyan color
+
+`const string BLGRAY` - light gray color
+
+`const string BLWHITE` - light whites color
 #### Default color
-`const string DEFAULT = "\033[0m"`
+`const string DEFAULT` - default color
+# [MCurses Widgets](https://github.com/mrybs/mcurses/blob/main/mcurses_widget.h)
+### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
+## About
+Library for creating custom widgets using mcurses in c++
+## Functions
+`float getX()` - returnes the x coordinate
+
+`float getY()` - returnes the y coordinate
+
+`float getWidth()` - returnes the width
+
+`float getHeight()` - returned the height
+
+`string getDefaultColor()` - returnes the default color
+
+`string getDefaultBackgroundColor()` - returnes the default background 
+color
+
+`int setX(float x)` - sets the x coordinate
+
+`int setY(float y)` - sets the y coordinate
+
+`int setWidth(float width)` - sets the width
+
+`int setHeight(float height)` - sets the height
+
+`int setDefaultColor(string color)` - sets the default color
+
+`int setDefaultBackgroundColor(string backgroundColor)` - sets the 
+default background color
+
+`int render(s)` - renders the widget
 
 # ASCIITEST
 ### [This c++ code is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
-This program is based on the mcurses library. It outputs the character number entered by the user.
-
+This program is based on the mcurses library. It outputs the character 
+number entered by the user.
 ## Compilation
 I use the gcc compiler. Just enter:
 
 `gcc -lstdc++ asciitest.cpp -o asciitest`
 
 In the mcurses folder
-
 ## Launch
 To start, you need to enter
 
