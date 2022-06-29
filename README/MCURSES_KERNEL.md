@@ -24,8 +24,6 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 
 `static char getch()` - gets char from input stream
 
-`void parseKey()` - parsing pressed keys
-
 `static void clear()` - clears the screen
 
 `string getColor(string color, bool fg)` - translates the name
@@ -55,29 +53,6 @@ draws a point on the coordinates with custom background color and char
 
 `void print(string text, float xd, float yd, string color, string bgColor, bool bold)` -
 print a text on the specified coordinates
-
-`void drawLine(float xd, float yd, float size, bool vertical, string color)` -
-draws a line
-
-`void drawLine(float xd, float yd, float size, bool vertical, string color, char backgroundd)` -
-draws a line with a custom background char
-
-`void drawRectangle(float xd, float yd, float width, float height, string color)` -
-draws a rectangle
-
-`void drawRectangle(float xd, float yd, float width, float height, string color, char backgroundd)` -
-draws a rectangle with a custom background char
-
-`void drawBackground(string color)` - draws a background
-
-`void drawBackground(string color, char backgroundd)` - draws a
-background with a custom background char
-
-`void drawBorder(float xd, float yd, float width, float height, float size, string color)` -
-draws a border
-
-`void drawBorder(float xd, float yd, float width, float height, float size, string color, char backgroundd)` -
-draws a border with a custom background char
 
 `void exitProgram(int result, const char* message)` - exits from program
 ## Variables
