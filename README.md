@@ -3,7 +3,7 @@
 ## About
 Library for creating TUI and for console controlling in c++
 
-## s[Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_KERNEL.md)
+## [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_KERNEL.md)
 
 # [MCurses Module](https://github.com/mrybs/mcurses/blob/main/mcurses_module.h)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
