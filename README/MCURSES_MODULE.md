@@ -38,9 +38,12 @@ To create a new module, create a file *.h and write the code in it as in the exa
 ### Example
 ***
     #include "mcurses_module.h"
+
     #pragma once
-    #ifndef MCURSES_EXAMPLE_MODULE_H
-    #define MCURSES_EXAMPLE_MODULE_H
+
+    #ifndef MCURSES_CUSTOM_MODULE_H
+    #define MCURSES_CUSTOM_MODULE_H
+
     using namespace std;
     using namespace mcurses;
 
@@ -63,30 +66,3 @@ To create a new module, create a file *.h and write the code in it as in the exa
     }
     #endif
 ***
-
-### Functions
-`float getX()` - returnes the x coordinate
-
-`float getY()` - returnes the y coordinate
-
-`float getWidth()` - returnes the width
-
-`float getHeight()` - returned the height
-
-`string getDefaultColor()` - returnes the default color
-
-`string getDefaultBackgroundColor()` - returnes the default background
-color
-
-`int setX(float x)` - sets the x coordinate
-
-`int setY(float y)` - sets the y coordinate
-
-`int setWidth(float width)` - sets the width
-
-`int setHeight(float height)` - sets the height
-
-`int setDefaultColor(string color)` - sets the default color
-
-`int setDefaultBackgroundColor(string backgroundColor)` - sets the
-default background color
