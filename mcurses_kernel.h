@@ -12,44 +12,47 @@ using namespace std;
 #pragma once
 #ifndef MCURSES_H
 #define MCURSES_H
+#define COLOR_MAX_ID 16
 
 namespace mcurses{
 class mcurses_kernel {
 public:
-    const string FBLACK = "\033[0;30m";
-    const string FRED = "\033[0;31m";
-    const string FGREEN = "\033[0;32m";
-    const string FYELLOW = "\033[0;33m";
-    const string FBLUE = "\033[0;34m";
-    const string FMAGENTA = "\033[0;35m";
-    const string FCYAN = "\033[0;36m";
-    const string FGRAY = "\033[0;37m";
-    const string FLRED = "\033[0;38m";
-    const string FWHITE = "\033[0;39m";
-    const string FLGREEN = "\033[0;92m";
-    const string FLYELLOW = "\033[0;93m";
-    const string FLBLUE = "\033[0;94m";
-    const string FLMAGENTA = "\033[0;95m";
-    const string FLCYAN = "\033[0;96m";
-    const string FLGRAY = "\033[0;97m";
+    const string FBLACK = "\033[0;30m";//0
+    const string FRED = "\033[0;31m";//1
+    const string FGREEN = "\033[0;32m";//2
+    const string FYELLOW = "\033[0;33m";//3
+    const string FBLUE = "\033[0;34m";//4
+    const string FMAGENTA = "\033[0;35m";//5
+    const string FCYAN = "\033[0;36m";//6
+    const string FGRAY = "\033[0;37m";//7
+    const string FLRED = "\033[0;38m";//8
+    const string FWHITE = "\033[0;39m";//9
+    const string FLGREEN = "\033[0;92m";//10
+    const string FLYELLOW = "\033[0;93m";//11
+    const string FLBLUE = "\033[0;94m";//12
+    const string FLMAGENTA = "\033[0;95m";//13
+    const string FLCYAN = "\033[0;96m";//14
+    const string FLGRAY = "\033[0;97m";//15
+    const string FLWHITE = "\033[0;39m";//15
 
-    const string BBLACK = "\033[0;40m";
-    const string BRED = "\033[0;41m";
-    const string BGREEN = "\033[0;42m";
-    const string BYELLOW = "\033[0;43m";
-    const string BBLUE = "\033[0;44m";
-    const string BMAGENTA = "\033[0;45m";
-    const string BCYAN = "\033[0;46m";
-    const string BWHITE = "\033[0;47m";
-    const string BGRAY = "\033[0;100m";
-    const string BLGRAY = "\033[0;100m";
-    const string BLRED = "\033[0;101m";
-    const string BLGREEN = "\033[0;102m";
-    const string BLYELLOW = "\033[0;103m";
-    const string BLBLUE = "\033[0;104m";
-    const string BLMAGENTA = "\033[0;105m";
-    const string BLCYAN = "\033[0;106m";
-    const string BLWHITE = "\033[0;107m";
+    const string BBLACK = "\033[0;40m";//0
+    const string BRED = "\033[0;41m";//1
+    const string BGREEN = "\033[0;42m";//2
+    const string BYELLOW = "\033[0;43m";//3
+    const string BBLUE = "\033[0;44m";//4
+    const string BMAGENTA = "\033[0;45m";//5
+    const string BCYAN = "\033[0;46m";//6
+    const string BWHITE = "\033[0;47m";//7
+    const string BGRAY = "\033[0;100m";//8
+    const string BLGRAY = "\033[0;100m";//9
+    const string BLRED = "\033[0;101m";//10
+    const string BLGREEN = "\033[0;102m";//11
+    const string BLYELLOW = "\033[0;103m";//12
+    const string BLBLUE = "\033[0;104m";//13
+    const string BLMAGENTA = "\033[0;105m";//14
+    const string BLCYAN = "\033[0;106m";//15
+    const string BLWHITE = "\033[0;107m";//16
+
     const string DEFAULT = "\033[0m";
 
     mcurses_kernel(){
@@ -61,8 +64,9 @@ public:
         background = ' ';
     }
     mcurses_kernel(float x, float y, float aspect) {
-        this->x = x;
-        this->y = y;
+        y++;
+        this->x = y;
+        this->y = x;
         this->aspect = aspect;
         cursorX = 0;
         cursorY = 0;
@@ -109,6 +113,7 @@ public:
             if (color == "LCYAN") return FLCYAN;
             if (color == "LMAGENTA") return FLMAGENTA;
             if (color == "LGRAY") return FLGRAY;
+            if (color == "LWHITE") return FLWHITE;
         }
         else{
             if (color == "BLACK") return BBLACK;
@@ -132,16 +137,40 @@ public:
         if (color == "NONE") return "";
         return DEFAULT;
     }
+    string getColorName(int id){
+        /*while(id <= COLOR_MAX_ID)
+            id -= COLOR_MAX_ID;*/
+        switch(id){
+            case 0:return "BLACK";
+            case 1:return "WHITE";
+            case 2:return "CYAN";
+            case 3:return "RED";
+            case 4:return "GREEN";
+            case 5:return "GRAY";
+            case 6:return "YELLOW";
+            case 7:return "MAGENTA";
+            case 8:return "LMAGENTA";
+            case 9:return "LGREEN";
+            case 10:return "LGRAY";
+            case 11:return "LYELLOW";
+            case 12:return "LRED";
+            case 13:return "LCYAN";
+            case 14:return "BLUE";
+            case 15:return "LBLUE";
+            case 16:return "LWHITE";
+            default:return "NONE";
+        }
+    }
     static void setLocale(int category, const char* locale) {setlocale(category, locale);}
     void exitProgram(int result, const char* message){
         setCursor(0,y);
         cout << "Exit message: " << message << endl;
         exit(result);
     }
-    void setCursor(float xd, float yd){
-        cout << "\033[" + to_string(int(yd)) + ";" + to_string(int(xd)) + "f";
-        cursorX = xd;
-        cursorY = yd;
+    void setCursor(float x, float y){
+        cout << "\033[" + to_string(int(y)) + ";" + to_string(int(x)) + "f";
+        cursorX = x;
+        cursorY = y;
     }
     void moveCursorX(float xd){
         if(xd > 0) cout << "\033[" + to_string(int(xd)) << "C";
@@ -164,6 +193,7 @@ public:
         setCursor(0,0);
     }
     void drawPoint(float x, float y, string bgColor) {
+        y++;
         bgColor = getColor(bgColor, false);
         x *= 2;
         string pixel = string(bgColor);
@@ -178,6 +208,7 @@ public:
         }
     }
     void drawPoint(float x, float y, string bgColor, char backgroundd) {
+        y++;
         bgColor = getColor(bgColor, false);
         x *= 2;
         string pixel = string(bgColor);
@@ -192,6 +223,7 @@ public:
         }
     }
     void drawPoint(float x, float y, string color, string bgColor) {
+        y++;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
         x *= 2;
@@ -208,6 +240,7 @@ public:
         }
     }
     void drawPoint(float x, float y, string color, string bgColor, char backgroundd) {
+        y++;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
         x *= 2;

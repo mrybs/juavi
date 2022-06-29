@@ -1,7 +1,7 @@
 #include "mcurses_kernel.h"
 
 int main(){
-    mcurses_kernel screen(20,20,1);
+    mcurses::mcurses_kernel screen(20,20,1);
     int input;
     cout << "ASCIITEST, (c) mrybs, 2022\n"
            "Press any key, <Ctrl+C> to exit\n";

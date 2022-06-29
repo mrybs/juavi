@@ -29,5 +29,3 @@ color
 
 `int setDefaultBackgroundColor(string backgroundColor)` - sets the
 default background color
-
-`int render(s)` - renders the widget
