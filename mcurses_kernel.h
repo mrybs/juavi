@@ -13,45 +13,47 @@ using namespace std;
 #ifndef MCURSES_H
 #define MCURSES_H
 #define COLOR_MAX_ID 16
+#define COLOR1PART string("\033[0;")
+#define COLOR2PART "m"
 
 namespace mcurses{
 class mcurses_kernel {
 public:
-    const string FBLACK = "\033[0;30m";//0
-    const string FRED = "\033[0;31m";//1
-    const string FGREEN = "\033[0;32m";//2
-    const string FYELLOW = "\033[0;33m";//3
-    const string FBLUE = "\033[0;34m";//4
-    const string FMAGENTA = "\033[0;35m";//5
-    const string FCYAN = "\033[0;36m";//6
-    const string FGRAY = "\033[0;37m";//7
-    const string FLRED = "\033[0;38m";//8
-    const string FWHITE = "\033[0;39m";//9
-    const string FLGREEN = "\033[0;92m";//10
-    const string FLYELLOW = "\033[0;93m";//11
-    const string FLBLUE = "\033[0;94m";//12
-    const string FLMAGENTA = "\033[0;95m";//13
-    const string FLCYAN = "\033[0;96m";//14
-    const string FLGRAY = "\033[0;97m";//15
-    const string FLWHITE = "\033[0;39m";//15
+    const string FBLACK = "30";//0
+    const string FRED = "31";//1
+    const string FGREEN = "32";//2
+    const string FYELLOW = "33";//3
+    const string FBLUE = "34";//4
+    const string FMAGENTA = "35";//5
+    const string FCYAN = "36";//6
+    const string FGRAY = "37";//7
+    const string FLRED = "38";//8
+    const string FWHITE = "39";//9
+    const string FLGREEN = "92";//10
+    const string FLYELLOW = "93";//11
+    const string FLBLUE = "94";//12
+    const string FLMAGENTA = "95";//13
+    const string FLCYAN = "96";//14
+    const string FLGRAY = "97";//15
+    const string FLWHITE = "39";//15
 
-    const string BBLACK = "\033[0;40m";//0
-    const string BRED = "\033[0;41m";//1
-    const string BGREEN = "\033[0;42m";//2
-    const string BYELLOW = "\033[0;43m";//3
-    const string BBLUE = "\033[0;44m";//4
-    const string BMAGENTA = "\033[0;45m";//5
-    const string BCYAN = "\033[0;46m";//6
-    const string BWHITE = "\033[0;47m";//7
-    const string BGRAY = "\033[0;100m";//8
-    const string BLGRAY = "\033[0;100m";//9
-    const string BLRED = "\033[0;101m";//10
-    const string BLGREEN = "\033[0;102m";//11
-    const string BLYELLOW = "\033[0;103m";//12
-    const string BLBLUE = "\033[0;104m";//13
-    const string BLMAGENTA = "\033[0;105m";//14
-    const string BLCYAN = "\033[0;106m";//15
-    const string BLWHITE = "\033[0;107m";//16
+    const string BBLACK = "40";//0
+    const string BRED = "41";//1
+    const string BGREEN = "42";//2
+    const string BYELLOW = "43";//3
+    const string BBLUE = "44";//4
+    const string BMAGENTA = "45";//5
+    const string BCYAN = "46";//6
+    const string BWHITE = "47";//7
+    const string BGRAY = "100";//8
+    const string BLGRAY = "100";//9
+    const string BLRED = "101";//10
+    const string BLGREEN = "102";//11
+    const string BLYELLOW = "103";//12
+    const string BLBLUE = "104";//13
+    const string BLMAGENTA = "105";//14
+    const string BLCYAN = "106";//15
+    const string BLWHITE = "107";//16
 
     const string DEFAULT = "\033[0m";
 
@@ -97,42 +99,42 @@ public:
     }
     string getColor(string color, bool fg) {
         if(fg){
-            if (color == "BLACK") return FBLACK;
-            if (color == "RED") return FRED;
-            if (color == "GREEN") return FGREEN;
-            if (color == "YELLOW") return FYELLOW;
-            if (color == "BLUE") return FBLUE;
-            if (color == "CYAN") return FCYAN;
-            if (color == "MAGENTA") return FMAGENTA;
-            if (color == "WHITE") return FWHITE;
-            if (color == "GRAY") return FGRAY;
-            if (color == "LRED") return FLRED;
-            if (color == "LGREEN") return FLGREEN;
-            if (color == "LYELLOW") return FLYELLOW;
-            if (color == "LBLUE") return FLBLUE;
-            if (color == "LCYAN") return FLCYAN;
-            if (color == "LMAGENTA") return FLMAGENTA;
-            if (color == "LGRAY") return FLGRAY;
-            if (color == "LWHITE") return FLWHITE;
+            if (color == "BLACK") return COLOR1PART + FBLACK + COLOR2PART;
+            if (color == "RED") return COLOR1PART + FRED + COLOR2PART;
+            if (color == "GREEN") return COLOR1PART + FGREEN + COLOR2PART;
+            if (color == "YELLOW") return COLOR1PART + FYELLOW + COLOR2PART;
+            if (color == "BLUE") return COLOR1PART + FBLUE + COLOR2PART;
+            if (color == "CYAN") return COLOR1PART + FCYAN + COLOR2PART;
+            if (color == "MAGENTA") return COLOR1PART + FMAGENTA + COLOR2PART;
+            if (color == "WHITE") return COLOR1PART + FWHITE + COLOR2PART;
+            if (color == "GRAY") return COLOR1PART + FGRAY + COLOR2PART;
+            if (color == "LRED") return COLOR1PART + FLRED + COLOR2PART;
+            if (color == "LGREEN") return COLOR1PART + FLGREEN + COLOR2PART;
+            if (color == "LYELLOW") return COLOR1PART + FLYELLOW + COLOR2PART;
+            if (color == "LBLUE") return COLOR1PART + FLBLUE + COLOR2PART;
+            if (color == "LCYAN") return COLOR1PART + FLCYAN + COLOR2PART;
+            if (color == "LMAGENTA") return COLOR1PART + FLMAGENTA + COLOR2PART;
+            if (color == "LGRAY") return COLOR1PART + FLGRAY + COLOR2PART;
+            if (color == "LWHITE") return COLOR1PART + FLWHITE + COLOR2PART;
         }
         else{
-            if (color == "BLACK") return BBLACK;
-            if (color == "RED") return BRED;
-            if (color == "GREEN") return BGREEN;
-            if (color == "YELLOW") return BYELLOW;
-            if (color == "BLUE") return BBLUE;
-            if (color == "CYAN") return BCYAN;
-            if (color == "MAGENTA") return BMAGENTA;
-            if (color == "WHITE") return BWHITE;
-            if (color == "GRAY") return BGRAY;
-            if (color == "LRED") return BLRED;
-            if (color == "LGREEN") return BLGREEN;
-            if (color == "LYELLOW") return BLYELLOW;
-            if (color == "LBLUE") return BLBLUE;
-            if (color == "LCYAN") return BLCYAN;
-            if (color == "LMAGENTA") return BLMAGENTA;
-            if (color == "LWHITE") return BLWHITE;
-            if (color == "LGRAY") return BLGRAY;
+            if (color == "BLACK") return COLOR1PART + BBLACK + COLOR2PART;
+            if (color == "RED") return COLOR1PART + BRED + COLOR2PART;
+            if (color == "GREEN") return COLOR1PART + BGREEN + COLOR2PART;
+            if (color == "YELLOW") return COLOR1PART + BYELLOW + COLOR2PART;
+            if (color == "BLUE") return COLOR1PART + BBLUE + COLOR2PART;
+            if (color == "CYAN") return COLOR1PART + BCYAN + COLOR2PART;
+            if (color == "MAGENTA") return COLOR1PART + BMAGENTA + COLOR2PART;
+            if (color == "WHITE") return COLOR1PART + BWHITE + COLOR2PART;
+            if (color == "GRAY") return COLOR1PART + BGRAY + COLOR2PART;
+            if (color == "LRED") return COLOR1PART + BLRED + COLOR2PART;
+            if (color == "LGREEN") return COLOR1PART + BLGREEN + COLOR2PART;
+            if (color == "LYELLOW") return COLOR1PART + BLYELLOW + COLOR2PART;
+            if (color == "LBLUE") return COLOR1PART + BLBLUE + COLOR2PART;
+            if (color == "LCYAN") return COLOR1PART + BLCYAN + COLOR2PART;
+            if (color == "LMAGENTA") return COLOR1PART + BLMAGENTA + COLOR2PART;
+            if (color == "LWHITE") return COLOR1PART + BLWHITE + COLOR2PART;
+            if (color == "LGRAY") return COLOR1PART + BLGRAY + COLOR2PART;
         }
         if (color == "NONE") return "";
         return DEFAULT;
@@ -256,6 +258,19 @@ public:
             cout << pixel;
         }
     }
+    void print(string text, float x, float y, string color, string bgColor) {
+        y++;
+        color = getColor(color, true);
+        bgColor = getColor(bgColor, false);
+        string toOut;
+        toOut += color;
+        toOut += bgColor;
+        toOut += text;
+        toOut += DEFAULT;
+        setCursor(x*aspect+1, y);
+        cout << toOut;
+    }
+
     float getX(){return x;}
     float getY(){return y;}
     float getAspect(){return aspect;}

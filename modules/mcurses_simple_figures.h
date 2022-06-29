@@ -12,9 +12,7 @@ namespace mcurses{
     class mcurses_simple_figures : public mcurses_module{
     public:
         mcurses_kernel* screen;
-        mcurses_simple_figures(float x, float y, float aspect) : mcurses_module(x, y, aspect){
-            //this->screen = screen;
-        }
+        mcurses_simple_figures(float x, float y, float aspect) : mcurses_module(x, y, aspect){}
         mcurses_simple_figures(float x, float y, float aspect, char background, mcurses_kernel screen) : mcurses_simple_figures(x, y, aspect){}
 
         void drawRectangle(float x, float y, float width, float height, string bgColor) {
@@ -81,19 +79,6 @@ namespace mcurses{
             drawLine(x, y + height, width, false, color, background);
             drawLine(x + width, y, width + 1, true, color, background);
             if(size != 1) drawBorder(x+1,y+1,width-2,height-2,size-1,color);
-        }
-        void print(string text, float x, float y, string color, string bgColor) {
-            color = getColor(color, true);
-            bgColor = getColor(bgColor, false);
-            string pixel;
-            for (int i = 0; i < text.length(); i++) {
-                pixel += color;
-                pixel += bgColor;
-                pixel += text[i];
-                pixel += DEFAULT;
-                screen->setCursor(x+(float)i, y);
-                cout << pixel;
-            }
         }
         void drawBackground(string color) {
             float screenX = screen->getX();
