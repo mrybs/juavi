@@ -170,32 +170,27 @@ public:
         exit(result);
     }
     void setCursor(float x, float y){
+        y++;
         cout << "\033[" + to_string(int(y)) + ";" + to_string(int(x)) + "f";
         cursorX = x;
         cursorY = y;
     }
-    void moveCursorX(float xd){
-        if(xd > 0) cout << "\033[" + to_string(int(xd)) << "C";
-        else if(xd < 0) cout << "\033[" + to_string(int(xd)) << "D";
-        cursorX += xd;
+    void moveCursorX(float x){
+        if(x > 0) cout << "\033[" + to_string(int(x)) << "C";
+        else if(x < 0) cout << "\033[" + to_string(int(x)) << "D";
+        cursorX += x;
     }
-    void moveCursorY(float yd){
-        if(yd > 0) cout << "\033[" + to_string(int(yd)) << "A";
-        else if(yd < 0) cout << "\033[" + to_string(int(yd)) << "B";
-        cursorY += yd;
-    }
-    void moveCursor(float xd, float yd){
-        moveCursorX(xd);
-        moveCursorY(yd);
-        cursorX += xd;
-        cursorY += yd;
+    void moveCursorY(float y){
+        y++;
+        if(y > 0) cout << "\033[" + to_string(int(y)) << "A";
+        else if(y < 0) cout << "\033[" + to_string(int(y)) << "B";
+        cursorY += y;
     }
     void clear(){
         cout << "\033[2J";
         setCursor(0,0);
     }
     void drawPoint(float x, float y, string bgColor) {
-        y++;
         bgColor = getColor(bgColor, false);
         x *= 2;
         string pixel = string(bgColor);
@@ -210,7 +205,6 @@ public:
         }
     }
     void drawPoint(float x, float y, string bgColor, char backgroundd) {
-        y++;
         bgColor = getColor(bgColor, false);
         x *= 2;
         string pixel = string(bgColor);
@@ -225,7 +219,6 @@ public:
         }
     }
     void drawPoint(float x, float y, string color, string bgColor) {
-        y++;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
         x *= 2;
@@ -242,7 +235,6 @@ public:
         }
     }
     void drawPoint(float x, float y, string color, string bgColor, char backgroundd) {
-        y++;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
         x *= 2;
@@ -277,6 +269,7 @@ public:
     float getCursorX(){return cursorX;}
     float getCursorY(){return cursorY;}
     char getBackground(){return background;}
+    void setBackground(char background){this->background=background;}
     string getBackgroundColor(){return backgroundColor;}
     void setBackgroundColor(string backgroundColor){this->backgroundColor=backgroundColor;}
 

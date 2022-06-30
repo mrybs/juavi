@@ -19,3 +19,8 @@ This program is based on the mcurses library. It outputs the character
 number entered by the user.
 
 ### [Click me](https://github.com/mrybs/mcurses/blob/main/README/ASCIITEST.md)
+
+## TODO
+### [What I did](https://github.com/mrybs/mcurses/blob/main/README/did.md)
+### [What am I doing](https://github.com/mrybs/mcurses/blob/main/README/doing.md)
+### [What I want to do](https://github.com/mrybs/mcurses/blob/main/README/wanttodo.md)

@@ -12,8 +12,12 @@ namespace mcurses{
     class mcurses_simple_figures : public mcurses_module{
     public:
         mcurses_kernel* screen;
-        mcurses_simple_figures(float x, float y, float aspect) : mcurses_module(x, y, aspect){}
-        mcurses_simple_figures(float x, float y, float aspect, char background, mcurses_kernel screen) : mcurses_simple_figures(x, y, aspect){}
+        mcurses_simple_figures(float x, float y, float aspect, mcurses_kernel* screen) : mcurses_module(x, y, aspect){
+            this->screen = screen;
+        }
+        mcurses_simple_figures(float x, float y, float aspect, mcurses_kernel* screen, char background) : mcurses_simple_figures(x, y, aspect, screen){
+            screen->setBackground(background);
+        }
 
         void drawRectangle(float x, float y, float width, float height, string bgColor) {
             float screenAspect = screen->getAspect();
@@ -24,14 +28,13 @@ namespace mcurses{
                         if (k >= (int)x && k <= (int)x + (int)height)
                             screen->drawPoint((float)k, (float)i, bgColor);
         }
-        void drawRectangle(float x, float y, float width, float height, string color, char backgroundd) {
+        void drawRectangle(float x, float y, float width, float height, string color, char background) {
             float screenAspect = screen->getAspect();
-            string pixel = string(color);
             for (int i = 0; i < int(y + width); i++)
                 if (i >= (int)y && i <= (int)y + (int)width)
                     for (int k = 0; k < int(x + height); k += (int(screenAspect) - 1))
                         if (k >= (int)x && k <= (int)x + (int)height)
-                            screen->drawPoint((float)k, (float)i, color, backgroundd);
+                            screen->drawPoint((float)k, (float)i, color, background);
         }
         void drawLine(float x, float y, float size, bool vertical, string color) {
             float screenAspect = screen->getAspect();
@@ -45,7 +48,7 @@ namespace mcurses{
                         screen->drawPoint((float)k, y, color);
             }
         }
-        void drawLine(float x, float y, float size, bool vertical, string color, char backgroundd) {
+        void drawLine(float x, float y, float size, bool vertical, string color, char background) {
             float screenAspect = screen->getAspect();
             if (vertical)
                 for (int i = 0; i < int(y + size); i++)
@@ -56,12 +59,12 @@ namespace mcurses{
                     else {
                         for (int k = 0; k < int(x + size); k += (int(screenAspect) - 1))
                             if (k >= (int)x && k <= (int)x + (int)size)
-                                screen->drawPoint((float)k, y, color, backgroundd);
+                                screen->drawPoint((float)k, y, color, background);
                     }
             else {
                 for (int k = 0; k < int(x + size); k += (int(screenAspect) - 1))
                     if (k >= (int)x && k <= (int)x + (int)size)
-                        screen->drawPoint((float)k, y, color, backgroundd);
+                        screen->drawPoint((float)k, y, color, background);
             }
         }
         void drawBorder(float x, float y, float width, float height, float size, string color) {
