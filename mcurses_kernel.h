@@ -6,15 +6,20 @@
 #include <clocale>
 #include <csignal>
 #include <cmath>
+#include <list>
+#include <iterator>
+#include <chrono>
+#include <thread>
 #include "termios.h"
+#include "classes/atimer.h"
 using namespace std;
 
 #pragma once
 #ifndef MCURSES_H
 #define MCURSES_H
-#define COLOR_MAX_ID 16
 #define COLOR1PART string("\033[0;")
 #define COLOR2PART "m"
+#define INPUTBUFFER 255
 
 namespace mcurses{
 class mcurses_kernel {
@@ -66,6 +71,8 @@ public:
         background = ' ';
     }
     mcurses_kernel(float x, float y, float aspect) {
+        for(int i = 0; i < INPUTBUFFER; i++)
+            CFI.push_front('\0');
         y++;
         this->x = y;
         this->y = x;
@@ -97,6 +104,13 @@ public:
         if (tcsetattr(0, TCSADRAIN, &old) < 0) perror ("tcsetattr ~ICANON");
         return buf;
     }
+    /*string keyListener(){
+        while(true){
+            string pressedKey = getPressedKeyOrCombination();
+            if(pressedKey != "\0" && pressedKey[0] != '\0' && pressedKey != "") return pressedKey;
+        }
+    }*/
+
     string getColor(string color, bool fg) {
         if(fg){
             if (color == "BLACK") return COLOR1PART + FBLACK + COLOR2PART;
@@ -277,7 +291,46 @@ private:
     float x, y, aspect, cursorX, cursorY;
     char background;
     string backgroundColor;
-
+    list <char> CFI; //Chars From Input
+    /*string getPressedKeyOrCombination() {
+        ADuration ad;
+        ad.start();
+        CFI.push_front(getch());
+        int j = 0;
+        for (char i: CFI) {
+            //escapeTimer = false;
+            ulong dur = ad.getDuration();
+            ad.start();
+            ad.start();
+            //cout << "j = " << j << ", escapeTimer = " << escapeTimer << ", i = " << int(i) << "\n";
+            if (j == 2) {
+                if (i == 27 && dur < 30) {
+                    char c1 = 27, c2 = 0, c3 = 0;
+                    int l = 0;
+                    for (char k: CFI) {
+                        l++;
+                        if (l == 0) c1 = k;
+                        else if (l == 1) c2 = k;
+                        else if (l == 2) {
+                            c3 = k;
+                            break;
+                        }
+                        cout << "l = " << int(l) << ", k = " << int(k) << ", c1 = " << int(c1) << ", c2 = " << int(c2) << ", c3 = " << int(c3) << endl;
+                        //t->restart();
+                    }
+                    for (int i = 0; i < INPUTBUFFER; i++)
+                        CFI.push_front('\0');
+                    return "To return1 >>> " +
+                           (to_string(char(c1)) + ";" + to_string(char(c2)) + ";" + to_string(char(c3)));
+                } else if (i != '\0') return "To return2 >>> " + to_string(CFI.front());
+                else return string("\0");
+            }
+            if (j > 2) break;
+            j++;
+        }
+        while (CFI.size() < INPUTBUFFER)
+            CFI.pop_back();
+    }*/
 };
 }
 
