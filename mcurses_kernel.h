@@ -11,13 +11,17 @@
 #include <chrono>
 #include <thread>
 #include "termios.h"
-#include "classes/atimer.h"
+//#include "classes/atimer.h"
 using namespace std;
+
+#define INPUTBUFFER 255
+#define DEFAULTBG ' '
 
 #pragma once
 #ifndef MCURSES_H
 #define MCURSES_H
-#define COLOR1PART string("\033[0;"+ to_string(int(
+
+#define COLOR1PART string("\033["+ to_string(int(
 #define COLOR2PART ))+"m")
 #define INPUTBUFFER 255
 
@@ -67,22 +71,17 @@ public:
         x = 1;
         y = 1;
         aspect = 1;
-        cursorX = 0;
-        cursorY = 0;
-        background = ' ';
+        background = DEFAULTBG;
+        for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
     }
     mcurses_kernel(float x, float y, float aspect) {
-        for(int i = 0; i < INPUTBUFFER; i++)
-            CFI.push_front('\0');
         y++;
         this->x = y;
         this->y = x;
         this->aspect = aspect;
-        cursorX = 0;
-        cursorY = 0;
         this->x *= aspect;
-        background = ' ';
-        cout << "\033[u";
+        background = DEFAULTBG;
+        for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
         clear();
     }
     mcurses_kernel(float x, float y, float aspect, char background) : mcurses_kernel(x, y, aspect)
@@ -113,7 +112,7 @@ public:
         }
     }*/
 
-    string getColor(const string color, const bool fg) {
+    string getColor(const string color, const bool fg){
         if(fg){
             if (color == "BLACK") return COLOR1PART FBLACK COLOR2PART;
             if (color == "RED") return COLOR1PART FRED COLOR2PART;
@@ -156,8 +155,6 @@ public:
         return DEFAULT;
     }
     string getColorName(const int id){
-        /*while(id <= COLOR_MAX_ID)
-            id -= COLOR_MAX_ID;*/
         switch(id){
             case 0:return "BLACK";
             case 1:return "WHITE";
@@ -209,62 +206,24 @@ public:
         return *this;
     }
     mcurses_kernel drawPoint(float x, float y, string bgColor) {
-        bgColor = getColor(bgColor, false);
-        x *= 2;
-        string pixel = string(bgColor);
-        if (bgColor == "NONE") pixel = " ";
-        else {
-            pixel += background;
-            pixel += DEFAULT;
-        }
-        for (int i = 0; i < this->aspect; i++){
-            setCursor(x-i+this->aspect,y);
-            cout << pixel;
-        }
-        return *this;
+        return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x, float y, string bgColor, char backgroundd) {
-        bgColor = getColor(bgColor, false);
-        x *= 2;
-        string pixel = string(bgColor);
-        if (bgColor == "NONE") pixel = " ";
-        else {
-            pixel += backgroundd;
-            pixel += DEFAULT;
-        }
-        for (int i = 0; i < this->aspect; i++){
-            setCursor(x-i+this->aspect,y);
-            cout << pixel;
-        }
-        return *this;
+    mcurses_kernel drawPoint(float x, float y, string bgColor, char background) {
+        return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x, float y, string color, string bgColor) {
+    mcurses_kernel drawPoint(float x, float y, const string color, const string bgColor) {
+        return drawPoint(x,y,color,bgColor,background);
+    }
+    mcurses_kernel drawPoint(float x,const float y,string color,string bgColor,const char background) {
+        x *= aspect;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
-        x *= 2;
-        string pixel = string(color);
-        pixel += string(bgColor);
+        string pixel = color;
+        pixel += bgColor;
         if (color == "NONE") pixel = " ";
         else {
-            pixel += background;
-            pixel += DEFAULT;
-        }
-        for (int i = 0; i < this->aspect; i++){
-            setCursor(x-i+this->aspect,y);
-            cout << pixel;
-        }
-        return *this;
-    }
-    mcurses_kernel drawPoint(float x, float y, string color, string bgColor, char backgroundd) {
-        color = getColor(color, true);
-        bgColor = getColor(bgColor, false);
-        x *= 2;
-        string pixel = string(color);
-        pixel += string(bgColor);
-        if (color == "NONE") pixel = " ";
-        else {
-            pixel += backgroundd;
-            pixel += DEFAULT;
+            pixel += char(background);
+            pixel+=DEFAULT;
         }
         for (int i = 0; i < this->aspect; i++) {
             setCursor(x-i+this->aspect,y);
@@ -274,13 +233,11 @@ public:
     }
     mcurses_kernel print(string text, float x, float y, string color, string bgColor) {
         y++;
-        color = getColor(color, true);
-        bgColor = getColor(bgColor, false);
-        string toOut;
-        toOut += color;
-        toOut += bgColor;
-        toOut += text;
-        toOut += DEFAULT;
+        string toOut =
+            getColor(color, true)+
+            getColor(bgColor, false)+
+            text+
+            DEFAULT;
         setCursor(x*aspect+1, y);
         cout << toOut;
         return *this;
