@@ -103,7 +103,7 @@ namespace mcurses{
                 if (i >= (int)y && i <= (int)y + (int)width)
                     for (int k = 0; k < int(x + height); k += (int(screen->getAspect()) - 1))
                         if (k >= (int)x && k <= (int)x + (int)height)
-                            drawPointRandom(k,i);
+                            drawPointRandom(i,k);
             return *this;
         }
         mcurses_colored_figures drawRectangleStripesH(float x,float y,float width,float height,const string firstColor,const string secondColor,char background) {
@@ -245,9 +245,9 @@ namespace mcurses{
         mcurses_colored_figures drawBorderStripesH(float x,float y,float width,float height,float size,const string firstColor,const string secondColor,char background) {
             while(size >= width || size >= height)size-=1;
             drawLineStripesH(x, y, width, false, firstColor, secondColor, background);
-            drawLineStripesH(x, y, width, true, firstColor, secondColor, background);
-            drawLineStripesH(x, y + height, width, false, firstColor, secondColor, background);
-            drawLineStripesH(x + width, y, width + 1, true,  firstColor, secondColor, background);
+            drawLineStripesH(x, y, height, true, firstColor, secondColor, background);
+            drawLineStripesH(x, y + height-1, width, false, firstColor, secondColor, background);
+            drawLineStripesH(x + width-1, y, height + 1, true,  firstColor, secondColor, background);
             if(size != 1) drawBorderStripesH(x+1,y+1,width-2,height-2,size-1,firstColor, secondColor, background);
             return *this;
         }

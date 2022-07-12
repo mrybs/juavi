@@ -11,7 +11,7 @@
 #include <chrono>
 #include <thread>
 #include "termios.h"
-//#include "classes/atimer.h"
+#include "classes/atimer.h"
 using namespace std;
 
 #define INPUTBUFFER 255
@@ -20,6 +20,7 @@ using namespace std;
 #pragma once
 #ifndef MCURSES_H
 #define MCURSES_H
+#define DEBUGGPKOC
 
 #define COLOR1PART string("\033["+ to_string(int(
 #define COLOR2PART ))+"m")
@@ -104,13 +105,15 @@ public:
         if (tcsetattr(0, TCSADRAIN, &old) < 0) perror ("tcsetattr ~ICANON");
         return buf;
     }
+#ifndef DEBUGGPKOC
     //TODO: make key listener
-    /*string keyListener(){
+    string keyListener(){
         while(true){
             string pressedKey = getPressedKeyOrCombination();
             if(pressedKey != "\0" && pressedKey[0] != '\0' && pressedKey != "") return pressedKey;
         }
-    }*/
+    }
+#endif
 
     string getColor(const string color, const bool fg){
         if(fg){
@@ -185,7 +188,7 @@ public:
     mcurses_kernel setCursor(const float x, const float y){
         cout << "\033[" + to_string(int(y+1)) + ";" + to_string(int(x)) + "f";
         cursorX = x;
-        cursorY = y+1;
+        cursorY = y;
         return *this;
     }
     mcurses_kernel moveCursorX(const float x){
@@ -214,7 +217,7 @@ public:
     mcurses_kernel drawPoint(float x, float y, const string color, const string bgColor) {
         return drawPoint(x,y,color,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x,const float y,string color,string bgColor,const char background) {
+    mcurses_kernel drawPoint(float x,float y,string color,string bgColor,const char background) {
         x *= aspect;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
@@ -223,22 +226,24 @@ public:
         if (color == "NONE") pixel = " ";
         else {
             pixel += char(background);
-            pixel+=DEFAULT;
+            pixel += DEFAULT;
         }
-        for (int i = 0; i < this->aspect; i++) {
-            setCursor(x-i+this->aspect,y);
+        if(background != '\n')
+            setCursor(x+this->aspect,y);
+        for (int i = 0; i < this->aspect &&
+             x <= this->x &&
+             y <= this->y; i++) {
             cout << pixel;
         }
         return *this;
     }
     mcurses_kernel print(string text, float x, float y, string color, string bgColor) {
-        y++;
         string toOut =
             getColor(color, true)+
             getColor(bgColor, false)+
             text+
             DEFAULT;
-        setCursor(x*aspect+1, y);
+        setCursor((x+1)*aspect, y);
         cout << toOut;
         return *this;
     }
@@ -256,12 +261,13 @@ public:
     mcurses_kernel setBackground(const char background){this->background=background;return *this;}
     mcurses_kernel setBackgroundColor(const string backgroundColor){this->backgroundColor=backgroundColor;return *this;}
 
-private:
+public:
     float x, y, aspect, cursorX, cursorY;
     char background;
     string backgroundColor;
     list <char> CFI; //Chars From Input
-    /*string getPressedKeyOrCombination() {
+#ifndef DEBUGGPKOC
+    string getPressedKeyOrCombination() {
         ADuration ad;
         ad.start();
         CFI.push_front(getch());
@@ -299,7 +305,8 @@ private:
         }
         while (CFI.size() < INPUTBUFFER)
             CFI.pop_back();
-    }*/
+    }
+#endif
 };
 }
 

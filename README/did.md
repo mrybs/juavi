@@ -23,3 +23,4 @@ the first draws simple shapes and the second draws beautiful backgrounds
 mcurses_colored_figures. This module allows you to draw not only beautiful 
 backgrounds, but also beautiful simple shapes  
 1.4.1) Most void functions hava become mcurses_kernel or similar mcurses_module. Now colors are stored in const char type
+2.0.0) Added widget support, fixed several bugs. Simplifed creation of interfaces
