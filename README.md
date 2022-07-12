@@ -12,6 +12,13 @@ Library for creating custom modules using mcurses in c++
 
 ### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_MODULE.md)
 
+# [MCurses Widget](https://github.com/mrybs/mcurses/blob/main/mcurses_module.h)
+### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
+## About
+Library for creating custom widgets using mcurses in c++
+
+### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_WIDGET.md)
+
 # [ASCIITEST](https://github.com/mrybs/mcurses/blob/main/asciitest.cpp)
 ### [This c++ code is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
