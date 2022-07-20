@@ -1,7 +1,7 @@
 # [MCurses Module](https://github.com/mrybs/mcurses/blob/main/mcurses_module.h)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
-Library for creating custom modules using mcurses in c++
+Engine for creating applications in a terminal with a pseudographic interface in unicode
 
 ## Connecting
 To connect modules, enter at the beginning of the code
@@ -13,24 +13,11 @@ To initialize the module write
 
 `mcurses_kernel screen(x, y, aspect);`
 
-`moduleName mn(x, y, aspect, screen);`
-
-
-Or if you require a poiniter
-
-`auto* screen = new mcurses_kernel(x, y, aspect);`
-
-`auto* mn = new moduleName(x, y, aspect);`
-
-`mn->screen = screen;`
+`moduleName mn(x, y, aspect, &screen);`
 
 To use any function from the module write something like this
 
 `mn.helloWorld(void);`
-
-or
-
-`mn->helloWorld(void)`
 
 ## Creating custom module
 To create a new module, create a file *.h and write the code in it as in the example
@@ -43,7 +30,6 @@ To create a new module, create a file *.h and write the code in it as in the exa
     #ifndef MCURSES_CUSTOM_MODULE_H
     #define MCURSES_CUSTOM_MODULE_H
 
-    using namespace std;
     using namespace mcurses;
 
     namespace mcurses{
@@ -53,7 +39,7 @@ To create a new module, create a file *.h and write the code in it as in the exa
           
           //Constructors
           mcurses_backgrounds(float x, float y, float aspect) : mcurses_module(x, y, aspect){}
-          mcurses_backgrounds(float x, float y, float aspect, char background) : mcurses_custom_module(x, y, aspect){
+          mcurses_backgrounds(float x, float y, float aspect, std::string background) : mcurses_custom_module(x, y, aspect){
             screen->setBackground(background)
           }
           

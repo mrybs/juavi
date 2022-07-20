@@ -10,6 +10,6 @@ public:
   virtual void hide() =0;
 
   int isHided = 1;
-  float x, y;
+  int x, y;
 };
 }

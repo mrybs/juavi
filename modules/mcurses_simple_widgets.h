@@ -19,7 +19,7 @@ public:
       this->borderSize=borderSize;
     }
     progress_bar(const float x, const float y, const float aspect,
-                         mcurses_simple_figures &msf, const char background)
+                         mcurses_simple_figures &msf, const std::string background)
         : progress_bar(x, y, aspect, width, height, borderSize, msf) {
       msf.screen->setBackground(background);
     }
@@ -52,10 +52,10 @@ private:
     int value = 0,
         maxValue = 1,
         step = 1;
-    char background = '-',
-         filledBackground = '#',
-         unfilledBackground = '.';
-    string backgroundBackgroundColor = "WHITE",
+    std::string background = "-",
+         filledBackground = "#",
+         unfilledBackground = ".";
+    std::string backgroundBackgroundColor = "WHITE",
            backgroundForegroundColor = "BLACK",
            filledBackgroundColor = "GREEN",
            filledForegroundColor = "WHITE",
@@ -78,53 +78,53 @@ public:
         render();
         return *this;
     }
-    progress_bar PBsetBackground(const char background) {
+    progress_bar PBsetBackground(const std::string background) {
         this->background = background;
         render();
         return *this;
     }
-    progress_bar PBsetFilledBackground(const char filledBackground) {
+    progress_bar PBsetFilledBackground(const std::string filledBackground) {
         this->filledBackground = filledBackground;
         render();
         return *this;
     }
-    progress_bar PBsetUnfilledBackground(const char unfilledBackground) {
+    progress_bar PBsetUnfilledBackground(const std::string unfilledBackground) {
         this->unfilledBackground = unfilledBackground;
         render();
         return *this;
     }
     progress_bar
-    PBsetBackgroundBackgroundColor(const string backgroundBackgroundColor) {
+    PBsetBackgroundBackgroundColor(const std::string backgroundBackgroundColor) {
         this->backgroundBackgroundColor = backgroundBackgroundColor;
         render();
         return *this;
     }
     progress_bar
-    PBsetBackgroundForegroundColor(const string backgroundForegroundColor) {
+    PBsetBackgroundForegroundColor(const std::string backgroundForegroundColor) {
         this->backgroundForegroundColor = backgroundForegroundColor;
         render();
         return *this;
     }
     progress_bar
-    PBsetFilledBackgroundColor(const string filledBackgroundColor) {
+    PBsetFilledBackgroundColor(const std::string filledBackgroundColor) {
         this->filledBackgroundColor = filledBackgroundColor;
         render();
         return *this;
     }
     progress_bar
-    PBsetFilledForegroundColor(const string filledForegroundColor) {
+    PBsetFilledForegroundColor(const std::string filledForegroundColor) {
         this->filledForegroundColor = filledForegroundColor;
         render();
         return *this;
     }
     progress_bar
-    PBsetUnfilledBackgroundColor(const string unfilledBackgroundColor) {
+    PBsetUnfilledBackgroundColor(const std::string unfilledBackgroundColor) {
         this->unfilledBackgroundColor = unfilledBackgroundColor;
         render();
         return *this;
     }
     progress_bar
-    PBsetUnfilledForegroundColor(const string unfilledForegroundColor) {
+    PBsetUnfilledForegroundColor(const std::string unfilledForegroundColor) {
         this->unfilledForegroundColor = unfilledForegroundColor;
         render();
         return *this;
@@ -158,15 +158,15 @@ public:
     float PBgetValue() { return value; }
     float PBgetMaxValue() { return maxValue; }
     float PBgetStep() { return step; }
-    char PBgetBackground() { return background; }
-    char PBgetFilledBackground() { return filledBackground; }
-    char PBgetUnfilledBackground() { return unfilledBackground; }
-    string PBgetBackgroundBackgroundColor() { return backgroundBackgroundColor; }
-    string PBgetBackgroundForegroundColor() { return backgroundForegroundColor; }
-    string PBgetFilledBackgroundColor() { return filledBackgroundColor; }
-    string PBgetFilledForegroundColor() { return filledForegroundColor; }
-    string PBgetUnfilledBackgroundColor() { return unfilledBackgroundColor; }
-    string PBgetUnfilledForegroundColor() { return unfilledForegroundColor; }
+    std::string PBgetBackground() { return background; }
+    std::string PBgetFilledBackground() { return filledBackground; }
+    std::string PBgetUnfilledBackground() { return unfilledBackground; }
+    std::string PBgetBackgroundBackgroundColor() { return backgroundBackgroundColor; }
+    std::string PBgetBackgroundForegroundColor() { return backgroundForegroundColor; }
+    std::string PBgetFilledBackgroundColor() { return filledBackgroundColor; }
+    std::string PBgetFilledForegroundColor() { return filledForegroundColor; }
+    std::string PBgetUnfilledBackgroundColor() { return unfilledBackgroundColor; }
+    std::string PBgetUnfilledForegroundColor() { return unfilledForegroundColor; }
 };
 class container : public Imcurses_widget{
 public:
@@ -192,7 +192,7 @@ public:
       this->msf = &msf;
     }
     container(const float x, const float y, const float aspect,
-                         mcurses_simple_figures &msf, const char background)
+                         mcurses_simple_figures &msf, const std::string background)
         : container(msf) {
       msf.screen->setBackground(background);
     }
@@ -202,7 +202,7 @@ public:
         return *this;
     }
 
-    vector<Imcurses_widget*> getAll(){
+    std::vector<Imcurses_widget*> getAll(){
         return mwvector;
     }
     container moveX(float x){
@@ -221,16 +221,16 @@ public:
         return *this;
     }
   private:
-    vector<Imcurses_widget*> mwvector;
+      std::vector<Imcurses_widget*> mwvector;
 };
 class window : public container{
 public:
   static enum shadows{UP_LEFT=0,UP,UP_RIGHT,RIGHT,DOWN_RIGHT,DOWN,DOWN_LEFT,LEFT} shadowTypes;
 
   mcurses_simple_figures *msf;
-  window(mcurses_simple_figures &msf, float x, float y, float width, float height, string backgroundColor, int shadow, int shadowType)
+  window(mcurses_simple_figures &msf, float x, float y, float width, float height, std::string backgroundColor, int shadow, int shadowType)
       : window(msf,x,y,width,height,backgroundColor,shadow,shadowType,"BLACK"){}
-  window(mcurses_simple_figures &msf, float x, float y, float width, float height, string backgroundColor, int shadow, int shadowType, string shadowColor) : container(msf){
+  window(mcurses_simple_figures &msf, float x, float y, float width, float height, std::string backgroundColor, int shadow, int shadowType, std::string shadowColor) : container(msf){
       this->x=x;
       this->y=y;
       this->shadow = shadow;
@@ -286,13 +286,13 @@ private:
   int shadow = 1,
       shadowType;
   float width, height;
-  string backgroundColor = "WHITE",
+  std::string backgroundColor = "WHITE",
          shadowColor = "BLACK";
 };
 class label : public Imcurses_widget{
 public:
     mcurses_simple_figures* msf;
-    label(mcurses_simple_figures &msf,float x, float y,string text){
+    label(mcurses_simple_figures &msf,float x, float y,std::string text){
         this->x = x;
         this->y = y;
         this->msf = &msf;
@@ -309,11 +309,11 @@ public:
         isHided = 2;
     }
 private:
-    string text = "";
+    std::string text = "";
 public:
     float getX(){return x;}
     float getY(){return y;}
-    string getText(){return text;}
+    std::string getText(){return text;}
     label setX(float x){
         this->x = x;
         return *this;
@@ -322,7 +322,7 @@ public:
         this->x = x;
         return *this;
     }
-    label setText(string text){
+    label setText(std::string text){
         this->text = text;
         return *this;
     }

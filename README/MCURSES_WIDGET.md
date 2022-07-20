@@ -15,19 +15,11 @@ To initialize the module write
 
 `widgetName wn(x, y, aspect, screen);`
 
-Or if you require a poiniter
-
-`auto* screen = new mcurses_kernel(x, y, aspect);`
-
-`auto* wn = new widgetName(x, y, aspect, screen);`
 
 To use any function from the module write something like this
 
 `wn.render(void);`
 
-or
-
-`wn->render(void)`
 
 ## Creating custom widget
 To create a new module, create a file *.h and write the code in it as in the example
@@ -40,7 +32,6 @@ To create a new module, create a file *.h and write the code in it as in the exa
     #ifndef MCURSES_CUSTOM_WIDGET_H
     #define MCURSES_CUSTOM_WIDGET_H
 
-    using namespace std;
     using namespace mcurses;
 
     namespace mcurses{
@@ -50,14 +41,14 @@ To create a new module, create a file *.h and write the code in it as in the exa
           
           //Constructors
           mcurses_backgrounds(float x, float y, float aspect) : mcurses_module(x, y, aspect){}
-          mcurses_backgrounds(float x, float y, float aspect, char background) : mcurses_custom_module(x, y, aspect){
+          mcurses_backgrounds(float x, float y, float aspect, std::string background) : mcurses_custom_module(x, y, aspect){
                 screen->setBackground(background)
           }
 
           //Functions
           void render(void) override{
-            screen->print("Hello, world!", 0, 0, "WHITE", "BLACK"); //Writes "Hello, world!" at x0 y0
-            return void;
+                screen->print("Hello, world!", 0, 0, "WHITE", "BLACK"); //Writes "Hello, world!" at x0 y0
+                return void;
           }
           void show(void) override{
                 isHided=0;

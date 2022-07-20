@@ -11,18 +11,16 @@
 #include <chrono>
 #include <thread>
 #include "termios.h"
-#include "classes/atimer.h"
-using namespace std;
 
 #define INPUTBUFFER 255
-#define DEFAULTBG ' '
+#define DEFAULTBG " "
 
 #pragma once
 #ifndef MCURSES_H
 #define MCURSES_H
 #define DEBUGGPKOC
 
-#define COLOR1PART string("\033["+ to_string(int(
+#define COLOR1PART std::string("\033["+ std::to_string(int(
 #define COLOR2PART ))+"m")
 #define INPUTBUFFER 255
 
@@ -85,7 +83,7 @@ public:
         for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
         clear();
     }
-    mcurses_kernel(float x, float y, float aspect, char background) : mcurses_kernel(x, y, aspect)
+    mcurses_kernel(float x, float y, float aspect, std::string background) : mcurses_kernel(x, y, aspect)
     {this->background = background;}
 
     //TODO: optimise getch()
@@ -107,7 +105,7 @@ public:
     }
 #ifndef DEBUGGPKOC
     //TODO: make key listener
-    string keyListener(){
+    std::string keyListener(){
         while(true){
             string pressedKey = getPressedKeyOrCombination();
             if(pressedKey != "\0" && pressedKey[0] != '\0' && pressedKey != "") return pressedKey;
@@ -115,7 +113,7 @@ public:
     }
 #endif
 
-    string getColor(const string color, const bool fg){
+    std::string getColor(const std::string color, const bool fg){
         if(fg){
             if (color == "BLACK") return COLOR1PART FBLACK COLOR2PART;
             if (color == "RED") return COLOR1PART FRED COLOR2PART;
@@ -157,7 +155,7 @@ public:
         if (color == "NONE") return "";
         return DEFAULT;
     }
-    string getColorName(const int id){
+    std::string getColorName(const int id){
         switch(id){
             case 0:return "BLACK";
             case 1:return "WHITE";
@@ -182,102 +180,115 @@ public:
     mcurses_kernel setLocale(const int category, const char* locale) {setlocale(category, locale);return *this;}
     void exitProgram(const int result, const char* message){
         setCursor(0,y);
-        cout << "Exit message: " << message << endl;
+        std::cout << "Exit message: " << message << "\n";
         exit(result);
     }
-    mcurses_kernel setCursor(const float x, const float y){
-        cout << "\033[" + to_string(int(y+1)) + ";" + to_string(int(x)) + "f";
+    mcurses_kernel setCursor(const float x,const float y){
+      std::cout << "\033[" + std::to_string(int(y)) + ";" + std::to_string(int(x-1)) + "f";
         cursorX = x;
         cursorY = y;
         return *this;
     }
-    mcurses_kernel moveCursorX(const float x){
-        if(x > 0) cout << "\033[" + to_string(int(x)) << "C";
-        else if(x < 0) cout << "\033[" + to_string(int(x)) << "D";
-        cursorX += x;
+    mcurses_kernel moveCursorX(const int xd){
+        if(xd > 0) std::cout << "\033[" + std::to_string(int(xd)) << "C";
+        else if(xd < 0) std::cout << "\033[" + std::to_string(int(xd)) << "D";
+        cursorX += xd;
         return *this;
     }
-    mcurses_kernel moveCursorY(const float y){
-        if(y > 0) cout << "\033[" + to_string(int(y+1)) << "A";
-        else if(y < 0) cout << "\033[" + to_string(int(y+1)) << "B";
-        cursorY += (y+1);
+    mcurses_kernel moveCursorY(const int yd){
+        if(yd > 0) std::cout << "\033[" + std::to_string(int(yd)) << "A";
+        else if(yd < 0) std::cout << "\033[" + std::to_string(int(yd)) << "B";
+        cursorY += (yd);
         return *this;
+    }
+    mcurses_kernel moveCursor(const int xd, const int yd){
+        moveCursorX(xd);
+        moveCursorY(yd);
+        return *this
     }
     mcurses_kernel clear(){
-        cout << "\033[2J";
+        std::cout << "\033[2J";
         setCursor(0,0);
         return *this;
     }
-    mcurses_kernel drawPoint(float x, float y, string bgColor) {
+    mcurses_kernel drawPoint(int x, int y, std::string bgColor) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x, float y, string bgColor, char background) {
+    mcurses_kernel drawPoint(int x, int y, std::string bgColor, std::string background, bool ifUseBackground) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x, float y, const string color, const string bgColor) {
+    mcurses_kernel drawPoint(int x, int y, const std::string color, const std::string bgColor) {
         return drawPoint(x,y,color,bgColor,background);
     }
-    mcurses_kernel drawPoint(float x,float y,string color,string bgColor,const char background) {
+    mcurses_kernel drawPoint(int x,int y,std::string color,std::string bgColor,const std::string background) {
         x *= aspect;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
-        string pixel = color;
+        std::string pixel = color;
         pixel += bgColor;
         if (color == "NONE") pixel = " ";
         else {
-            pixel += char(background);
+            pixel += background;
             pixel += DEFAULT;
         }
-        if(background != '\n')
+        if(background != "\n")
             setCursor(x+this->aspect,y);
         for (int i = 0; i < this->aspect &&
              x <= this->x &&
              y <= this->y; i++) {
-            cout << pixel;
+            std::cout << pixel;
         }
         return *this;
     }
-    mcurses_kernel print(string text, float x, float y, string color, string bgColor) {
-        string toOut =
+    mcurses_kernel print(std::string text, int x, int y, std::string color, std::string bgColor) {
+        std::string toOut =
             getColor(color, true)+
             getColor(bgColor, false)+
             text+
             DEFAULT;
         setCursor((x+1)*aspect, y);
-        cout << toOut;
+        std::cout << toOut;
+        return *this;
+    }
+    mcurses_kernel drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor){
+        return drawVector(x,y,V,color,bgColor,background);
+    }
+    mcurses_kernel drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor,const std::string background){
+        for(int i = 0; i < V.size(); i++)
+            for(int j = 0; j < V[i].size(); j++)
+                if(V[i][j])
+                    drawPoint(j, i, color, bgColor, background);
         return *this;
     }
 
-    float getX(){return x;}
-    float getY(){return y;}
-    float getAspect(){return aspect;}
-    float getCursorX(){return cursorX;}
-    float getCursorY(){return cursorY;}
-    char getBackground(){return background;}
-    string getBackgroundColor(){return backgroundColor;}
-    mcurses_kernel setX(const float x){this->x=x;return *this;}
-    mcurses_kernel setY(const float y){this->y=y;return *this;}
+    int getX(){return x;}
+    int getY(){return y;}
+    int getAspect(){return aspect;}
+    int getCursorX(){return cursorX;}
+    int getCursorY(){return cursorY;}
+    std::string getBackground(){return background;}
+    std::string getBackgroundColor(){return backgroundColor;}
+    mcurses_kernel setX(const int x){this->x=x;return *this;}
+    mcurses_kernel setY(const int y){this->y=y;return *this;}
     mcurses_kernel setAspect(const float aspect){this->aspect=aspect;return *this;}
-    mcurses_kernel setBackground(const char background){this->background=background;return *this;}
-    mcurses_kernel setBackgroundColor(const string backgroundColor){this->backgroundColor=backgroundColor;return *this;}
+    mcurses_kernel setBackground(const std::string background){this->background=background;return *this;}
+    mcurses_kernel setBackgroundColor(const std::string backgroundColor){this->backgroundColor=backgroundColor;return *this;}
 
 public:
-    float x, y, aspect, cursorX, cursorY;
-    char background;
-    string backgroundColor;
-    list <char> CFI; //Chars From Input
+    int x, y, aspect, cursorX, cursorY;
+    std::string background;
+    std::string backgroundColor;
+    std::list <char> CFI; //Chars From Input
 #ifndef DEBUGGPKOC
-    string getPressedKeyOrCombination() {
+    std::string getPressedKeyOrCombination() {
         ADuration ad;
         ad.start();
         CFI.push_front(getch());
         int j = 0;
         for (char i: CFI) {
-            //escapeTimer = false;
             ulong dur = ad.getDuration();
             ad.start();
             ad.start();
-            //cout << "j = " << j << ", escapeTimer = " << escapeTimer << ", i = " << int(i) << "\n";
             if (j == 2) {
                 if (i == 27 && dur < 30) {
                     char c1 = 27, c2 = 0, c3 = 0;
@@ -290,15 +301,13 @@ public:
                             c3 = k;
                             break;
                         }
-                        cout << "l = " << int(l) << ", k = " << int(k) << ", c1 = " << int(c1) << ", c2 = " << int(c2) << ", c3 = " << int(c3) << endl;
-                        //t->restart();
                     }
                     for (int i = 0; i < INPUTBUFFER; i++)
                         CFI.push_front('\0');
                     return "To return1 >>> " +
-                           (to_string(char(c1)) + ";" + to_string(char(c2)) + ";" + to_string(char(c3)));
-                } else if (i != '\0') return "To return2 >>> " + to_string(CFI.front());
-                else return string("\0");
+                           (std::to_string(char(c1)) + ";" + std::to_string(char(c2)) + ";" + std::to_string(char(c3)));
+                } else if (i != '\0') return "To return2 >>> " + std::to_string(CFI.front());
+                else return std::string("\0");
             }
             if (j > 2) break;
             j++;

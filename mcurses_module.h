@@ -10,7 +10,7 @@ namespace mcurses{
 class mcurses_module : public mcurses_kernel{
 public:
     mcurses_module(float x, float y, float aspect) : mcurses_kernel(x, y, aspect){}
-    mcurses_module(float x, float y, float aspect, char background) : mcurses_kernel(x, y, aspect, background){}
+    mcurses_module(float x, float y, float aspect, std::string background) : mcurses_kernel(x, y, aspect, background){}
 };
 }
 
