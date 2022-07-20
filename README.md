@@ -1,7 +1,7 @@
 # [MCurses](https://github.com/mrybs/mcurses/blob/main/mcurses_kernel.h)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
-Library for creating TUI and for console controlling in c++
+Engine for creating applications in a terminal with a pseudographic interface in unicode
 
 ### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_KERNEL.md)
 
