@@ -204,7 +204,7 @@ public:
     mcurses_kernel moveCursor(const int xd, const int yd){
         moveCursorX(xd);
         moveCursorY(yd);
-        return *this
+        return *this;
     }
     mcurses_kernel clear(){
         std::cout << "\033[2J";
@@ -229,14 +229,13 @@ public:
         if (color == "NONE") pixel = " ";
         else {
             pixel += background;
-            pixel += DEFAULT;
         }
         if(background != "\n")
             setCursor(x+this->aspect,y);
         for (int i = 0; i < this->aspect &&
              x <= this->x &&
              y <= this->y; i++) {
-            std::cout << pixel;
+             std::cout << pixel;
         }
         return *this;
     }

@@ -12,3 +12,4 @@ cmake-build-debug-build-1
 cmake-build-debug-build-1/*
 CMakeLists.txt
 examples
+Makefile

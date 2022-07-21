@@ -327,4 +327,96 @@ public:
         return *this;
     }
 };
+class stackedContainer : public Imcurses_widget{
+public:
+    mcurses_simple_figures *msf;
+
+    void render() override{
+        if(getPagesCount() > 0)
+            pages[currentPage]->render();
+    }
+    void show() override{
+        isHided = 0;
+        render();
+    }
+    void hide() override{
+        isHided = 2;
+        render();
+    }
+
+    stackedContainer(mcurses_simple_figures &msf){
+        this->msf=&msf;
+    }
+
+    std::vector<container*> getPages(){
+        return pages;
+    }
+    int getPagesCount(){
+        return pages.size();
+    }
+    stackedContainer selectPage(int page){
+        if(getPagesCount() <= page) return *this;
+        currentPage = page;
+        render();
+        return *this;
+    }
+    stackedContainer add(container *page){
+        pages.push_back(page);
+        return *this;
+    }
+
+private:
+    int currentPage = 0;
+    std::vector<container*> pages;
+
+};
+class tabContainer : public container{
+public:
+    struct tab{
+        container* widgets;
+        std::string name;
+    };
+    mcurses_simple_figures *msf;
+    tabContainer(mcurses_simple_figures &msf, int x, int y, int width) : container(msf){
+        this->x=x;
+        this->y=y;
+        this->width=width;
+        this->msf=&msf;
+    }
+    void render() override{
+        msf->drawLine(x,y,width,false,"WHITE","YELLOW");
+        int curX = x;
+        for(auto i : tabs){
+            if(tabs[currentTab] == i){
+                print(i->name, curX, y, "WHITE", "GREEN");
+            }else
+                print(i->name, curX, y, "WHITE", "YELLOW");
+            curX += i->name.size()+1;
+            print(" ", curX, y, "WHITE", "YELLOW");
+            curX += std::string(" ").size();
+        }
+        if(getTabsCount() > 0)
+            tabs[currentTab]->widgets->render();
+    }
+    std::vector<tab*> getTabs(){
+        return tabs;
+    }
+    int getTabsCount(){
+        return tabs.size();
+    }
+    tabContainer selectTab(int tabID){
+        if(getTabsCount() <= tabID) return *this;
+        currentTab = tabID;
+        render();
+        return *this;
+    }
+    tabContainer add(tab *T){
+        tabs.push_back(T);
+        return *this;
+    }
+private:
+  int currentTab = 0;
+  int width;
+  std::vector<tab*> tabs;
+};
 }
