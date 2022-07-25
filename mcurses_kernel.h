@@ -66,6 +66,12 @@ public:
 
     const char* DEFAULT = "\033[0m";
 
+    struct RGB {
+        int r;
+        int g;
+        int b;
+    };
+
     mcurses_kernel(){
         x = 1;
         y = 1;
@@ -113,46 +119,104 @@ public:
     }
 #endif
 
+    struct RGB hexToRGB(const char* hexValue){
+      int r, g, b;
+      std::sscanf(hexValue, "#%02x%02x%02x", &r, &g, &b);
+      return {r, g, b};
+    }
+
     std::string getColor(const std::string color, const bool fg){
-        if(fg){
-            if (color == "BLACK") return COLOR1PART FBLACK COLOR2PART;
-            if (color == "RED") return COLOR1PART FRED COLOR2PART;
-            if (color == "GREEN") return COLOR1PART FGREEN COLOR2PART;
-            if (color == "YELLOW") return COLOR1PART FYELLOW COLOR2PART;
-            if (color == "BLUE") return COLOR1PART FBLUE COLOR2PART;
-            if (color == "CYAN") return COLOR1PART FCYAN COLOR2PART;
-            if (color == "MAGENTA") return COLOR1PART FMAGENTA COLOR2PART;
-            if (color == "WHITE") return COLOR1PART FWHITE COLOR2PART;
-            if (color == "GRAY") return COLOR1PART FGRAY COLOR2PART;
-            if (color == "LRED") return COLOR1PART FLRED COLOR2PART;
-            if (color == "LGREEN") return COLOR1PART FLGREEN COLOR2PART;
-            if (color == "LYELLOW") return COLOR1PART FLYELLOW COLOR2PART;
-            if (color == "LBLUE") return COLOR1PART FLBLUE COLOR2PART;
-            if (color == "LCYAN") return COLOR1PART FLCYAN COLOR2PART;
-            if (color == "LMAGENTA") return COLOR1PART FLMAGENTA COLOR2PART;
-            if (color == "LGRAY") return COLOR1PART FLGRAY COLOR2PART;
-            if (color == "LWHITE") return COLOR1PART FLWHITE COLOR2PART;
-        }
-        else{
-            if (color == "BLACK") return COLOR1PART BBLACK COLOR2PART;
-            if (color == "RED") return COLOR1PART BRED COLOR2PART;
-            if (color == "GREEN") return COLOR1PART BGREEN COLOR2PART;
-            if (color == "YELLOW") return COLOR1PART BYELLOW COLOR2PART;
-            if (color == "BLUE") return COLOR1PART BBLUE COLOR2PART;
-            if (color == "CYAN") return COLOR1PART BCYAN COLOR2PART;
-            if (color == "MAGENTA") return COLOR1PART BMAGENTA COLOR2PART;
-            if (color == "WHITE") return COLOR1PART BWHITE COLOR2PART;
-            if (color == "GRAY") return COLOR1PART BGRAY COLOR2PART;
-            if (color == "LRED") return COLOR1PART BLRED COLOR2PART;
-            if (color == "LGREEN") return COLOR1PART BLGREEN COLOR2PART;
-            if (color == "LYELLOW") return COLOR1PART BLYELLOW COLOR2PART;
-            if (color == "LBLUE") return COLOR1PART BLBLUE COLOR2PART;
-            if (color == "LCYAN") return COLOR1PART BLCYAN COLOR2PART;
-            if (color == "LMAGENTA") return COLOR1PART BLMAGENTA COLOR2PART;
-            if (color == "LWHITE") return COLOR1PART BLWHITE COLOR2PART;
-            if (color == "LGRAY") return COLOR1PART BLGRAY COLOR2PART;
-        }
-        if (color == "NONE") return "";
+        if(!color.empty())
+            if(color[0] == '#'){
+                if(color.size() == 7) {
+                    if (fg)
+                        return "\033[38;2;" +
+                               std::to_string(hexToRGB(color.c_str()).r) + ";" +
+                               std::to_string(hexToRGB(color.c_str()).g) + ";" +
+                               std::to_string(hexToRGB(color.c_str()).b) + "m";
+                    return "\033[48;2;" +
+                           std::to_string(hexToRGB(color.c_str()).r) + ";" +
+                           std::to_string(hexToRGB(color.c_str()).g) + ";" +
+                           std::to_string(hexToRGB(color.c_str()).b) + "m";
+                } else return "";
+            }
+            else {
+                if (fg) {
+                  if (color == "BLACK")
+                    return COLOR1PART FBLACK COLOR2PART;
+                  if (color == "RED")
+                    return COLOR1PART FRED COLOR2PART;
+                  if (color == "GREEN")
+                    return COLOR1PART FGREEN COLOR2PART;
+                  if (color == "YELLOW")
+                    return COLOR1PART FYELLOW COLOR2PART;
+                  if (color == "BLUE")
+                    return COLOR1PART FBLUE COLOR2PART;
+                  if (color == "CYAN")
+                    return COLOR1PART FCYAN COLOR2PART;
+                  if (color == "MAGENTA")
+                    return COLOR1PART FMAGENTA COLOR2PART;
+                  if (color == "WHITE")
+                    return COLOR1PART FWHITE COLOR2PART;
+                  if (color == "GRAY")
+                    return COLOR1PART FGRAY COLOR2PART;
+                  if (color == "LRED")
+                    return COLOR1PART FLRED COLOR2PART;
+                  if (color == "LGREEN")
+                    return COLOR1PART FLGREEN COLOR2PART;
+                  if (color == "LYELLOW")
+                    return COLOR1PART FLYELLOW COLOR2PART;
+                  if (color == "LBLUE")
+                    return COLOR1PART FLBLUE COLOR2PART;
+                  if (color == "LCYAN")
+                    return COLOR1PART FLCYAN COLOR2PART;
+                  if (color == "LMAGENTA")
+                    return COLOR1PART FLMAGENTA COLOR2PART;
+                  if (color == "LGRAY")
+                    return COLOR1PART FLGRAY COLOR2PART;
+                  if (color == "LWHITE")
+                    return COLOR1PART FLWHITE COLOR2PART;
+                } else {
+                  if (color == "BLACK")
+                    return COLOR1PART BBLACK COLOR2PART;
+                  if (color == "RED")
+                    return COLOR1PART BRED COLOR2PART;
+                  if (color == "GREEN")
+                    return COLOR1PART BGREEN COLOR2PART;
+                  if (color == "YELLOW")
+                    return COLOR1PART BYELLOW COLOR2PART;
+                  if (color == "BLUE")
+                    return COLOR1PART BBLUE COLOR2PART;
+                  if (color == "CYAN")
+                    return COLOR1PART BCYAN COLOR2PART;
+                  if (color == "MAGENTA")
+                    return COLOR1PART BMAGENTA COLOR2PART;
+                  if (color == "WHITE")
+                    return COLOR1PART BWHITE COLOR2PART;
+                  if (color == "GRAY")
+                    return COLOR1PART BGRAY COLOR2PART;
+                  if (color == "LRED")
+                    return COLOR1PART BLRED COLOR2PART;
+                  if (color == "LGREEN")
+                    return COLOR1PART BLGREEN COLOR2PART;
+                  if (color == "LYELLOW")
+                    return COLOR1PART BLYELLOW COLOR2PART;
+                  if (color == "LBLUE")
+                    return COLOR1PART BLBLUE COLOR2PART;
+                  if (color == "LCYAN")
+                    return COLOR1PART BLCYAN COLOR2PART;
+                  if (color == "LMAGENTA")
+                    return COLOR1PART BLMAGENTA COLOR2PART;
+                  if (color == "LWHITE")
+                    return COLOR1PART BLWHITE COLOR2PART;
+                  if (color == "LGRAY")
+                    return COLOR1PART BLGRAY COLOR2PART;
+                }
+                if (color == "NONE")
+                    return "";
+            }
+        else
+            return "";
         return DEFAULT;
     }
     std::string getColorName(const int id){

@@ -32,6 +32,8 @@ Copy `mcurses.h` file into your project. Include it into your main file:
 ## Functions
 `mcurses_kernel setLocale(int category, const char* locale)` - sets locale
 
+`struct RGB hexToRGB(const char* hexValue)` - convert HEX(#RRGGBB) into RGB(R,G,B)
+
 `static char getch()` - gets char from input stream
 
 `mcurses_kernel clear()` - clears the screen
