@@ -67,29 +67,42 @@ public:
     const char* DEFAULT = "\033[0m";
 
     struct RGB {
-        int r;
-        int g;
-        int b;
+        double r;
+        double g;
+        double b;
+    };
+
+    struct HSV {
+      double h;
+      double s;
+      double v;
     };
 
     mcurses_kernel(){
         x = 1;
         y = 1;
-        aspect = 1;
-        background = DEFAULTBG;
-        for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
-    }
-    mcurses_kernel(float x, float y, float aspect) {
-        y++;
-        this->x = y;
-        this->y = x;
-        this->aspect = aspect;
-        this->x *= aspect;
+        aspect = 2;
+        cursorX = 0;
+        cursorY = 0;
         background = DEFAULTBG;
         for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
         clear();
     }
-    mcurses_kernel(float x, float y, float aspect, std::string background) : mcurses_kernel(x, y, aspect)
+    mcurses_kernel(int x, int y, int aspect) {
+        this->x = x;
+        this->y = y;
+        this->aspect = aspect;
+        this->x *= aspect;
+        cursorX = 0;
+        cursorY = 0;
+        background = DEFAULTBG;
+        //for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
+        clear();
+        setCursor(37,37);
+        std::cout<<this->x<<";"<<this->y<<".";
+        setCursor(0, 0);
+    }
+    mcurses_kernel(int x, int y, int aspect, std::string background) : mcurses_kernel(x, y, aspect)
     {this->background = background;}
 
     //TODO: optimise getch()
@@ -119,10 +132,67 @@ public:
     }
 #endif
 
-    struct RGB hexToRGB(const char* hexValue){
+    RGB HSVtoRGB (HSV in){
+        double hh, p, q, t, ff;
+        RGB out;
+        if(in.s <= 0.0) {
+            out.r = in.v;
+            out.g = in.v;
+            out.b = in.v;
+            return out;
+        }
+        hh = in.h;
+        if(hh >= 360.0) hh = 0.0;
+        hh /= 60.0;
+        long i = (long)hh;
+        ff = hh - i;
+        p = in.v * (1.0 - in.s);
+        q = in.v * (1.0 - (in.s * ff));
+        t = in.v * (1.0 - (in.s * (1.0 - ff)));
+        switch(i) {
+        case 0:
+            out.r = in.v;
+            out.g = t;
+            out.b = p;
+            break;
+        case 1:
+            out.r = q;
+            out.g = in.v;
+            out.b = p;
+            break;
+        case 2:
+            out.r = p;
+            out.g = in.v;
+            out.b = t;
+            break;
+        case 3:
+            out.r = p;
+            out.g = q;
+            out.b = in.v;
+            break;
+        case 4:
+            out.r = t;
+            out.g = p;
+            out.b = in.v;
+            break;
+        case 5:
+        default:
+            out.r = in.v;
+            out.g = p;
+            out.b = q;
+            break;
+            return out;
+        }
+    };
+
+    mcurses_kernel* setColor(const std::string color, const std::string bgColor){
+        std::cout<<getColor(color, true)<< getColor(bgColor, false);
+    }
+
+    static struct RGB hexToRGB(const char* hexValue){
       int r, g, b;
       std::sscanf(hexValue, "#%02x%02x%02x", &r, &g, &b);
-      return {r, g, b};
+      return {double(r), double(g), double(b)};
     }
 
     std::string getColor(const std::string color, const bool fg){
@@ -131,13 +201,13 @@ public:
                 if(color.size() == 7) {
                     if (fg)
                         return "\033[38;2;" +
-                               std::to_string(hexToRGB(color.c_str()).r) + ";" +
-                               std::to_string(hexToRGB(color.c_str()).g) + ";" +
-                               std::to_string(hexToRGB(color.c_str()).b) + "m";
+                               std::to_string((int)hexToRGB(color.c_str()).r) + ";" +
+                               std::to_string((int)hexToRGB(color.c_str()).g) + ";" +
+                               std::to_string((int)hexToRGB(color.c_str()).b) + "m";
                     return "\033[48;2;" +
-                           std::to_string(hexToRGB(color.c_str()).r) + ";" +
-                           std::to_string(hexToRGB(color.c_str()).g) + ";" +
-                           std::to_string(hexToRGB(color.c_str()).b) + "m";
+                           std::to_string((int)hexToRGB(color.c_str()).r) + ";" +
+                           std::to_string((int)hexToRGB(color.c_str()).g) + ";" +
+                           std::to_string((int)hexToRGB(color.c_str()).b) + "m";
                 } else return "";
             }
             else {
@@ -241,50 +311,50 @@ public:
             default:return "NONE";
         }
     }
-    mcurses_kernel setLocale(const int category, const char* locale) {setlocale(category, locale);return *this;}
+    mcurses_kernel* setLocale(const int category, const char* locale) {setlocale(category, locale);return this;}
     void exitProgram(const int result, const char* message){
         setCursor(0,y);
         std::cout << "Exit message: " << message << "\n";
         exit(result);
     }
-    mcurses_kernel setCursor(const float x,const float y){
+    mcurses_kernel* setCursor(const float x,const float y){
       std::cout << "\033[" + std::to_string(int(y)) + ";" + std::to_string(int(x-1)) + "f";
         cursorX = x;
         cursorY = y;
-        return *this;
+        return this;
     }
-    mcurses_kernel moveCursorX(const int xd){
+    mcurses_kernel* moveCursorX(const int xd){
         if(xd > 0) std::cout << "\033[" + std::to_string(int(xd)) << "C";
         else if(xd < 0) std::cout << "\033[" + std::to_string(int(xd)) << "D";
         cursorX += xd;
-        return *this;
+        return this;
     }
-    mcurses_kernel moveCursorY(const int yd){
+    mcurses_kernel* moveCursorY(const int yd){
         if(yd > 0) std::cout << "\033[" + std::to_string(int(yd)) << "A";
         else if(yd < 0) std::cout << "\033[" + std::to_string(int(yd)) << "B";
         cursorY += (yd);
-        return *this;
+        return this;
     }
-    mcurses_kernel moveCursor(const int xd, const int yd){
+    mcurses_kernel* moveCursor(const int xd, const int yd){
         moveCursorX(xd);
         moveCursorY(yd);
-        return *this;
+        return this;
     }
-    mcurses_kernel clear(){
+    mcurses_kernel* clear(){
         std::cout << "\033[2J";
         setCursor(0,0);
-        return *this;
+        return this;
     }
-    mcurses_kernel drawPoint(int x, int y, std::string bgColor) {
+    mcurses_kernel* drawPoint(int x, int y, std::string bgColor) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(int x, int y, std::string bgColor, std::string background, bool ifUseBackground) {
+    mcurses_kernel* drawPoint(int x, int y, std::string bgColor, std::string background, bool ifUseBackground) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel drawPoint(int x, int y, const std::string color, const std::string bgColor) {
+    mcurses_kernel* drawPoint(int x, int y, const std::string color, const std::string bgColor) {
         return drawPoint(x,y,color,bgColor,background);
     }
-    mcurses_kernel drawPoint(int x,int y,std::string color,std::string bgColor,const std::string background) {
+    mcurses_kernel* drawPoint(int x,int y,std::string color,std::string bgColor,const std::string background) {
         x *= aspect;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
@@ -297,13 +367,13 @@ public:
         if(background != "\n")
             setCursor(x+this->aspect,y);
         for (int i = 0; i < this->aspect &&
-             x <= this->x &&
+             x <= this->x*aspect &&
              y <= this->y; i++) {
              std::cout << pixel;
         }
-        return *this;
+        return this;
     }
-    mcurses_kernel print(std::string text, int x, int y, std::string color, std::string bgColor) {
+    mcurses_kernel* print(std::string text, int x, int y, std::string color, std::string bgColor) {
         std::string toOut =
             getColor(color, true)+
             getColor(bgColor, false)+
@@ -311,17 +381,17 @@ public:
             DEFAULT;
         setCursor((x+1)*aspect, y);
         std::cout << toOut;
-        return *this;
+        return this;
     }
-    mcurses_kernel drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor){
+    mcurses_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor){
         return drawVector(x,y,V,color,bgColor,background);
     }
-    mcurses_kernel drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor,const std::string background){
+    mcurses_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor,const std::string background){
         for(int i = 0; i < V.size(); i++)
             for(int j = 0; j < V[i].size(); j++)
                 if(V[i][j])
                     drawPoint(j, i, color, bgColor, background);
-        return *this;
+        return this;
     }
 
     int getX(){return x;}
@@ -331,11 +401,11 @@ public:
     int getCursorY(){return cursorY;}
     std::string getBackground(){return background;}
     std::string getBackgroundColor(){return backgroundColor;}
-    mcurses_kernel setX(const int x){this->x=x;return *this;}
-    mcurses_kernel setY(const int y){this->y=y;return *this;}
-    mcurses_kernel setAspect(const float aspect){this->aspect=aspect;return *this;}
-    mcurses_kernel setBackground(const std::string background){this->background=background;return *this;}
-    mcurses_kernel setBackgroundColor(const std::string backgroundColor){this->backgroundColor=backgroundColor;return *this;}
+    mcurses_kernel* setX(const int x){this->x=x;return this;}
+    mcurses_kernel* setY(const int y){this->y=y;return this;}
+    mcurses_kernel* setAspect(const float aspect){this->aspect=aspect;return this;}
+    mcurses_kernel* setBackground(const std::string background){this->background=background;return this;}
+    mcurses_kernel* setBackgroundColor(const std::string backgroundColor){this->backgroundColor=backgroundColor;return this;}
 
 public:
     int x, y, aspect, cursorX, cursorY;

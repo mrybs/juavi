@@ -12,6 +12,6 @@ public:
   void cycle(){}
 
   int isHided = 1;
-  int x, y;
+  int x, y, aspect;
 };
 }
