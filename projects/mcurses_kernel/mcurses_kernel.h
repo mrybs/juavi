@@ -1,22 +1,16 @@
-///
-/// Developed by mrybs
-///
-#include "termios.h"
-#include <algorithm>
-#include <asm-generic/ioctls.h>
-#include <chrono>
-#include <clocale>
-#include <cmath>
-#include <csignal>
-#include <cstdio>
 #include <iostream>
-#include <iterator>
-#include <list>
-#include <string>
-#include <sys/ioctl.h>
-#include <sys/select.h>
-#include <thread>
 #include <vector>
+#include <string>
+#include <algorithm>
+#include <cstdio>
+#include <clocale>
+#include <csignal>
+#include <cmath>
+#include <list>
+#include <iterator>
+#include <chrono>
+#include <thread>
+#include "termios.h"
 
 #define INPUTBUFFER 255
 #define DEFAULTBG " "
@@ -73,9 +67,9 @@ public:
     const char* DEFAULT = "\033[0m";
 
     struct RGB {
-      double r;
-      double g;
-      double b;
+        double r;
+        double g;
+        double b;
     };
 
     struct HSV {
@@ -85,31 +79,33 @@ public:
     };
 
     mcurses_kernel(){
-      x = 1;
-      y = 1;
-      aspect = 2;
-      cursorX = 0;
-      cursorY = 0;
-      background = DEFAULTBG;
-      for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
-      clear();
+        x = 1;
+        y = 1;
+        aspect = 2;
+        cursorX = 0;
+        cursorY = 0;
+        background = DEFAULTBG;
+        for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
+        clear();
     }
     mcurses_kernel(int x, int y, int aspect) {
-      this->x = x;
-      this->y = y;
-      this->aspect = aspect;
-      this->x *= aspect;
-      cursorX = 0;
-      cursorY = 0;
-      background = DEFAULTBG;
-      //for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
-      clear();
-      setCursor(37,37);
-      setCursor(0, 0);
+        this->x = x;
+        this->y = y;
+        this->aspect = aspect;
+        this->x *= aspect;
+        cursorX = 0;
+        cursorY = 0;
+        background = DEFAULTBG;
+        //for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
+        clear();
+        setCursor(37,37);
+        std::cout<<this->x<<";"<<this->y<<".";
+        setCursor(0, 0);
     }
     mcurses_kernel(int x, int y, int aspect, std::string background) : mcurses_kernel(x, y, aspect)
     {this->background = background;}
 
+    //TODO: optimise getch()
     static char getch() {
         char buf = 0;
         struct termios old = {0};
@@ -125,35 +121,6 @@ public:
         old.c_lflag |= ECHO;
         if (tcsetattr(0, TCSADRAIN, &old) < 0) perror ("tcsetattr ~ICANON");
         return buf;
-    }
-    static char kbhit() {
-      static const int STDIN = 0;
-      static bool initialized = false;
-      if (! initialized) {
-        termios term;
-        tcgetattr(STDIN, &term);
-        term.c_lflag &= ~ICANON;
-        tcsetattr(STDIN, TCSANOW, &term);
-        setbuf(stdin, NULL);
-        initialized = true;
-      }
-      int bytesWaiting;
-      ioctl(STDIN, FIONREAD, &bytesWaiting);
-      return bytesWaiting;
-    }
-    static char pressed(){
-      fd_set set;
-      struct timeval tv;
-      tv.tv_sec = 10;
-      tv.tv_usec = 0;
-      FD_ZERO( &set );
-      FD_SET( fileno( stdin ), &set );
-      if(mcurses_kernel::kbhit()){
-        char c;
-        read( fileno( stdin ), &c, 1 );
-        return c;
-      }
-      return 0;
     }
 #ifndef DEBUGGPKOC
     //TODO: make key listener
@@ -352,7 +319,7 @@ public:
         exit(result);
     }
     mcurses_kernel* setCursor(const float x,const float y){
-      std::cout << "\033[" + std::to_string(int(y+1)) + ";" + std::to_string(int(x-1)) + "f";
+      std::cout << "\033[" + std::to_string(int(y)) + ";" + std::to_string(int(x-1)) + "f";
         cursorX = x;
         cursorY = y;
         return this;
@@ -424,40 +391,8 @@ public:
         for(int i = 0; i < V.size(); i++)
             for(int j = 0; j < V[i].size(); j++)
                 if(V[i][j])
-                    drawPoint(x+j, y+i, color, bgColor, background);
+                    drawPoint(j, i, color, bgColor, background);
         return this;
-    }
-    mcurses_kernel* drawMCursesLogo(const int x,const int y){
-      bool logo[12][12] = {
-          {0,0,0,0,0,0,0,0,0,0,0,0},
-          {0,0,1,0,0,1,1,0,0,1,0,0},
-          {0,1,1,1,0,1,1,0,1,1,1,0},
-          {0,1,1,1,1,1,1,1,1,1,1,0},
-          {0,1,1,1,1,1,1,1,1,1,1,0},
-          {0,1,1,0,1,1,1,1,0,1,1,0},
-          {0,1,1,0,0,1,1,0,0,1,1,0},
-          {0,1,1,0,0,1,1,0,0,1,1,0},
-          {0,1,1,0,0,1,1,0,0,1,1,0},
-          {0,1,1,0,0,1,1,0,0,1,1,0},
-          {0,0,1,0,0,1,1,0,0,1,0,0},
-          {0,0,0,0,0,0,0,0,0,0,0,0}
-      };
-      std::vector<std::vector<bool>>vlogo;
-      vlogo.resize(12);
-      for(int i = 0; i < 12; i++){
-        vlogo[i].resize(12);
-        for(int j = 0; j < 12; j++){
-          vlogo[i][j] = logo[i][j];
-        }
-      }
-      drawVector(x,y,vlogo,"#000000","#7700ff");
-      for(int i = 0; i < 12; i++){
-        for(int j = 0; j < 12; j++){
-          vlogo[i][j] = !logo[i][j];
-        }
-      }
-      drawVector(x,y,vlogo,"#7700ff","#000000");
-      return this;
     }
 
     int getX(){return x;}

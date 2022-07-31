@@ -1,3 +1,6 @@
+///
+/// Developed by mrybs
+///
 #include "../mcurses_widget.h"
 #include "../modules/mcurses_simple_figures.h"
 #include <vector>

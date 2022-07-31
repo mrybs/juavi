@@ -1,3 +1,6 @@
+///
+/// Developed by mrybs
+///
 #include <ctime>
 #include <iostream>
 #include <limits>

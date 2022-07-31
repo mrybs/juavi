@@ -1,3 +1,6 @@
+///
+/// Developed by mrybs
+///
 #include "mcurses_kernel.h"
 
 #pragma once

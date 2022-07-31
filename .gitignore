@@ -12,4 +12,8 @@ cmake-build-debug-build-1
 cmake-build-debug-build-1/*
 CMakeLists.txt
 examples
+main.o
 Makefile
+projects/empty/main
+projects/mcurses_kernel/main
+utils/mcurses
