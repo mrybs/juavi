@@ -1,33 +1,33 @@
-# [MCurses](https://github.com/mrybs/mcurses/blob/main/mcurses_kernel.h)
+# [Juavi Engine](https://github.com/mrybs/juavi/blob/main/juavi_kernel.hpp)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
 Engine for creating applications in a terminal with a pseudographic interface in unicode
 
-### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_KERNEL.md)
+### [Click me](https://github.com/mrybs/juavi/blob/main/README/MCURSES_KERNEL.md)
 
-# [MCurses Module](https://github.com/mrybs/mcurses/blob/main/mcurses_module.h)
+# [Juavi Module](https://github.com/mrybs/juavi/blob/main/juavi_module.hpp)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
-Library for creating custom modules using mcurses in c++
+Library for creating your own modules for Juavi Engine
 
-### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_MODULE.md)
+### [Click me](https://github.com/mrybs/juavi/blob/main/README/MCURSES_MODULE.md)
 
-# [MCurses Widget](https://github.com/mrybs/mcurses/blob/main/mcurses_module.h)
+# [Juavi Widget](https://github.com/mrybs/juavi/blob/main/juavi_module.hpp)
 ### [This library is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
 ## About
-Library for creating custom widgets using mcurses in c++
+Library for creating your own widgets for Juavi Engine
 
-### [Click me](https://github.com/mrybs/mcurses/blob/main/README/MCURSES_WIDGET.md)
+### [Click me](https://github.com/mrybs/juavi/blob/main/README/MCURSES_WIDGET.md)
 
-# [ASCIITEST](https://github.com/mrybs/mcurses/blob/main/asciitest.cpp)
-### [This c++ code is under GNU General Public Licence 3](https://github.com/mrybs/mcurses/blob/main/LICENSE)
+# [ASCIITEST](https://github.com/mrybs/juavi/blob/main/asciitest.cpp)
+### [This c++ code is under GNU General Public Licence 3](https://github.com/mrybs/juavi/blob/main/LICENSE)
 ## About
-This program is based on the mcurses library. It outputs the character 
+This program is based on the Juavi Engine. It outputs the character
 number entered by the user.
 
-### [Click me](https://github.com/mrybs/mcurses/blob/main/README/ASCIITEST.md)
+### [Click me](https://github.com/mrybs/juavi/blob/main/README/ASCIITEST.md)
 
 ## TODO
-### [What I did](https://github.com/mrybs/mcurses/blob/main/README/did.md)
-### [What am I doing](https://github.com/mrybs/mcurses/blob/main/README/doing.md)
-### [What I want to do](https://github.com/mrybs/mcurses/blob/main/README/wanttodo.md)
+### [What I did](https://github.com/mrybs/juavi/blob/main/README/did.md)
+### [What am I doing](https://github.com/mrybs/juavi/blob/main/README/doing.md)
+### [What I want to do](https://github.com/mrybs/juavi/blob/main/README/wanttodo.md)
