@@ -1,19 +1,19 @@
 ///
 /// Developed by mrybs
 ///
-#include "../mcurses_widget.h"
-#include "../modules/mcurses_simple_figures.h"
+#include "../juavi_widget.hpp"
+#include "../modules/juavi_simple_figures.hpp"
 #include <vector>
 #define watch(x) cout<<"Var is "<<x;
 
-namespace mcurses {
+namespace juavi {
 
-class progress_bar : public Imcurses_widget{
+class progress_bar : public Ijuavi_widget{
 public:
-    mcurses_simple_figures *msf;
+    juavi_simple_figures *msf;
     progress_bar(const int x, const int y, const int aspect,
                          const int width, const int height,
-                         const int borderSize, mcurses_simple_figures &msf){
+                         const int borderSize, juavi_simple_figures &msf){
       this->x=x;
       this->y=y;
       this->msf = &msf;
@@ -23,7 +23,7 @@ public:
       this->aspect=aspect;
     }
     progress_bar(const int x, const int y, const int aspect,
-                         mcurses_simple_figures &msf, const std::string background)
+                         juavi_simple_figures &msf, const std::string background)
         : progress_bar(x, y, aspect, width, height, borderSize, msf) {
       msf.screen->setBackground(background);
     }
@@ -172,9 +172,9 @@ public:
     std::string PBgetUnfilledBackgroundColor() { return unfilledBackgroundColor; }
     std::string PBgetUnfilledForegroundColor() { return unfilledForegroundColor; }
 };
-class container : public Imcurses_widget{
+class container : public Ijuavi_widget{
 public:
-    mcurses_simple_figures *msf;
+  juavi_simple_figures *msf;
     void render() override{
         for(int i = 0; i < getAll().size(); i++){
             getAll()[i]->render();
@@ -192,21 +192,21 @@ public:
           getAll()[i]->hide();
         }
     }
-    explicit container(mcurses_simple_figures &msf){
+    explicit container(juavi_simple_figures &msf){
       this->msf = &msf;
     }
     container(const float x, const float y, const float aspect,
-                         mcurses_simple_figures &msf, const std::string background)
+              juavi_simple_figures &msf, const std::string background)
         : container(msf) {
       msf.screen->setBackground(background);
     }
 
-    container* add(Imcurses_widget* widget){
+    container* add(Ijuavi_widget* widget){
         mwvector.push_back(widget);
         return this;
     }
 
-    std::vector<Imcurses_widget*> getAll(){
+    std::vector<Ijuavi_widget*> getAll(){
         return mwvector;
     }
     container* moveX(float x){
@@ -225,16 +225,16 @@ public:
         return this;
     }
   private:
-      std::vector<Imcurses_widget*> mwvector;
+      std::vector<Ijuavi_widget*> mwvector;
 };
 class window : public container{
 public:
   static enum shadows{UP_LEFT=0,UP,UP_RIGHT,RIGHT,DOWN_RIGHT,DOWN,DOWN_LEFT,LEFT} shadowTypes;
 
-  mcurses_simple_figures *msf;
-  window(mcurses_simple_figures &msf, int x, int y, int aspect,int width, int height, std::string backgroundColor, int shadow, int shadowType)
+  juavi_simple_figures *msf;
+  window(juavi_simple_figures &msf, int x, int y, int aspect,int width, int height, std::string backgroundColor, int shadow, int shadowType)
       : window(msf,x,y,aspect,width,height,backgroundColor,shadow,shadowType,"BLACK"){}
-  window(mcurses_simple_figures &msf, int x, int y, int aspect,int width, int height, std::string backgroundColor, int shadow, int shadowType, std::string shadowColor) : container(msf){
+  window(juavi_simple_figures &msf, int x, int y, int aspect,int width, int height, std::string backgroundColor, int shadow, int shadowType, std::string shadowColor) : container(msf){
       this->x=x+1;
       this->y=y;
       this->shadow = shadow;
@@ -294,10 +294,10 @@ private:
   std::string backgroundColor = "WHITE",
          shadowColor = "BLACK";
 };
-class label : public Imcurses_widget{
+class label : public Ijuavi_widget{
 public:
-    mcurses_simple_figures* msf;
-    label(mcurses_simple_figures &msf,int x, int y,int aspect,std::string text){
+  juavi_simple_figures* msf;
+    label(juavi_simple_figures &msf,int x, int y,int aspect,std::string text){
         this->x = x;
         this->y = y;
         this->msf = &msf;
@@ -322,9 +322,9 @@ public:
         return this;
     }
 };
-class stackedContainer : public Imcurses_widget{
+class stackedContainer : public Ijuavi_widget{
 public:
-    mcurses_simple_figures *msf;
+  juavi_simple_figures *msf;
 
     void render() override{
         if(getPagesCount() > 0)
@@ -337,7 +337,7 @@ public:
         isHided = 2;
     }
 
-    stackedContainer(mcurses_simple_figures &msf){
+    stackedContainer(juavi_simple_figures &msf){
         this->msf=&msf;
     }
 
@@ -369,8 +369,8 @@ public:
         container* widgets;
         std::string name;
     };
-    mcurses_simple_figures *msf;
-    tabContainer(mcurses_simple_figures &msf, int x, int y, int aspect, int width) : container(msf){
+    juavi_simple_figures *msf;
+    tabContainer(juavi_simple_figures &msf, int x, int y, int aspect, int width) : container(msf){
         this->x=x;
         this->y=y;
         this->width=width;

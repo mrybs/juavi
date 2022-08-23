@@ -22,8 +22,8 @@
 #define DEFAULTBG " "
 
 #pragma once
-#ifndef MCURSES_H
-#define MCURSES_H
+#ifndef JUAVI_H
+#define JUAVI_H
 #define DEBUGGPKOC
 
 #define COLOR1PART std::string("\033["+ std::to_string(int(
@@ -31,8 +31,8 @@
 #define INPUTBUFFER 255
 
 
-namespace mcurses{
-class mcurses_kernel {
+namespace juavi{
+class juavi_kernel {
 public:
     const char FBLACK = 30;//0
     const char FRED = 31;//1
@@ -84,7 +84,7 @@ public:
       double v;
     };
 
-    mcurses_kernel(){
+    juavi_kernel(){
       x = 1;
       y = 1;
       aspect = 2;
@@ -94,7 +94,7 @@ public:
       for(int i = 0; i < INPUTBUFFER; i++) CFI.push_front('\0');
       clear();
     }
-    mcurses_kernel(int x, int y, int aspect) {
+    juavi_kernel(int x, int y, int aspect) {
       this->x = x;
       this->y = y;
       this->aspect = aspect;
@@ -107,7 +107,7 @@ public:
       setCursor(37,37);
       setCursor(0, 0);
     }
-    mcurses_kernel(int x, int y, int aspect, std::string background) : mcurses_kernel(x, y, aspect)
+    juavi_kernel(int x, int y, int aspect, std::string background) : juavi_kernel(x, y, aspect)
     {this->background = background;}
 
     static char getch() {
@@ -148,7 +148,7 @@ public:
       tv.tv_usec = 0;
       FD_ZERO( &set );
       FD_SET( fileno( stdin ), &set );
-      if(mcurses_kernel::kbhit()){
+      if(juavi_kernel::kbhit()){
         char c;
         read( fileno( stdin ), &c, 1 );
         return c;
@@ -218,7 +218,7 @@ public:
         }
     };
 
-    mcurses_kernel* setColor(const std::string color, const std::string bgColor){
+    juavi_kernel* setColor(const std::string color, const std::string bgColor){
         std::cout<<getColor(color, true)<< getColor(bgColor, false);
         return this;
     }
@@ -345,50 +345,50 @@ public:
             default:return "NONE";
         }
     }
-    mcurses_kernel* setLocale(const int category, const char* locale) {setlocale(category, locale);return this;}
+    juavi_kernel* setLocale(const int category, const char* locale) {setlocale(category, locale);return this;}
     void exitProgram(const int result, const char* message){
         setCursor(0,y);
         std::cout << "Exit message: " << message << "\n";
         exit(result);
     }
-    mcurses_kernel* setCursor(const float x,const float y){
+    juavi_kernel* setCursor(const float x,const float y){
       std::cout << "\033[" + std::to_string(int(y+1)) + ";" + std::to_string(int(x-1)) + "f";
         cursorX = x;
         cursorY = y;
         return this;
     }
-    mcurses_kernel* moveCursorX(const int xd){
+    juavi_kernel* moveCursorX(const int xd){
         if(xd > 0) std::cout << "\033[" + std::to_string(int(xd)) << "C";
         else if(xd < 0) std::cout << "\033[" + std::to_string(int(xd)) << "D";
         cursorX += xd;
         return this;
     }
-    mcurses_kernel* moveCursorY(const int yd){
+    juavi_kernel* moveCursorY(const int yd){
         if(yd > 0) std::cout << "\033[" + std::to_string(int(yd)) << "A";
         else if(yd < 0) std::cout << "\033[" + std::to_string(int(yd)) << "B";
         cursorY += (yd);
         return this;
     }
-    mcurses_kernel* moveCursor(const int xd, const int yd){
+    juavi_kernel* moveCursor(const int xd, const int yd){
         moveCursorX(xd);
         moveCursorY(yd);
         return this;
     }
-    mcurses_kernel* clear(){
+    juavi_kernel* clear(){
         std::cout << "\033[2J";
         setCursor(0,0);
         return this;
     }
-    mcurses_kernel* drawPoint(int x, int y, std::string bgColor) {
+    juavi_kernel* drawPoint(int x, int y, std::string bgColor) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel* drawPoint(int x, int y, std::string bgColor, std::string background, bool ifUseBackground) {
+    juavi_kernel* drawPoint(int x, int y, std::string bgColor, std::string background, bool ifUseBackground) {
         return drawPoint(x,y,bgColor,bgColor,background);
     }
-    mcurses_kernel* drawPoint(int x, int y, const std::string color, const std::string bgColor) {
+    juavi_kernel* drawPoint(int x, int y, const std::string color, const std::string bgColor) {
         return drawPoint(x,y,color,bgColor,background);
     }
-    mcurses_kernel* drawPoint(int x,int y,std::string color,std::string bgColor,const std::string background) {
+    juavi_kernel* drawPoint(int x,int y,std::string color,std::string bgColor,const std::string background) {
         x *= aspect;
         color = getColor(color, true);
         bgColor = getColor(bgColor, false);
@@ -407,7 +407,7 @@ public:
         }
         return this;
     }
-    mcurses_kernel* print(std::string text, int x, int y, std::string color, std::string bgColor) {
+    juavi_kernel* print(std::string text, int x, int y, std::string color, std::string bgColor) {
         std::string toOut =
             getColor(color, true)+
             getColor(bgColor, false)+
@@ -417,17 +417,17 @@ public:
         std::cout << toOut;
         return this;
     }
-    mcurses_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor){
+    juavi_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor){
         return drawVector(x,y,V,color,bgColor,background);
     }
-    mcurses_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor,const std::string background){
+    juavi_kernel* drawVector(const int x,const int y,std::vector<std::vector<bool>>V,const std::string color,const std::string bgColor,const std::string background){
         for(int i = 0; i < V.size(); i++)
             for(int j = 0; j < V[i].size(); j++)
                 if(V[i][j])
                     drawPoint(x+j, y+i, color, bgColor, background);
         return this;
     }
-    mcurses_kernel* drawMCursesLogo(const int x,const int y){
+    juavi_kernel* drawJuaviLogo(const int x,const int y){
       bool logo[12][12] = {
           {0,0,0,0,0,0,0,0,0,0,0,0},
           {0,0,1,0,0,1,1,0,0,1,0,0},
@@ -467,11 +467,11 @@ public:
     int getCursorY(){return cursorY;}
     std::string getBackground(){return background;}
     std::string getBackgroundColor(){return backgroundColor;}
-    mcurses_kernel* setX(const int x){this->x=x;return this;}
-    mcurses_kernel* setY(const int y){this->y=y;return this;}
-    mcurses_kernel* setAspect(const float aspect){this->aspect=aspect;return this;}
-    mcurses_kernel* setBackground(const std::string background){this->background=background;return this;}
-    mcurses_kernel* setBackgroundColor(const std::string backgroundColor){this->backgroundColor=backgroundColor;return this;}
+    juavi_kernel* setX(const int x){this->x=x;return this;}
+    juavi_kernel* setY(const int y){this->y=y;return this;}
+    juavi_kernel* setAspect(const float aspect){this->aspect=aspect;return this;}
+    juavi_kernel* setBackground(const std::string background){this->background=background;return this;}
+    juavi_kernel* setBackgroundColor(const std::string backgroundColor){this->backgroundColor=backgroundColor;return this;}
 
 public:
     int x, y, aspect, cursorX, cursorY;
