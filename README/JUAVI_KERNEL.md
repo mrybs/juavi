@@ -64,8 +64,11 @@ draws a point on the specified coordinates with a custom background color
 `juavi_kernel* drawPoint(int x, int y, std::string color, std::string bgColor, std::string backgroundd)` -
 draws a point on the coordinates with custom background color and char
 
+`juavi_kernel* print(std::string text, std::string color, std::string bgColor)` -
+prints a colored text
+
 `juavi_kernel* print(std::string text, int x, int y, std::string color, std::string bgColor)` -
-print a text on the specified coordinates
+prints a colored text on the specified coordinates
 
 `juavi_kernel* drawVector(const int x, const int y,std::vector<std::vector<bool>>V,const std::string color, const std::string bgColor)` -
 draws a bool 2D vector

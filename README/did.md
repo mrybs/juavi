@@ -29,3 +29,4 @@ backgrounds, but also beautiful simple shapes
 2.3.0) BUG FIXES  
 2.3.1) Added some functions for reading keyboard. Started developing new utility for simpler using of MCurses. Fixed some bugs   
 2.4.0) MCurses Engine now renamed to Juavi Engine
+2.4.1) Added new print function
